@@ -1,3 +1,6 @@
+// Fulfill the basic objectives to search for keyword, choose the suggestion and get content in the form of a wikipedia generated code format.
+// Had a search history function to allow users to see what they had previously searched for.
+
 let urltoSearch = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=';
 let urlforContent = 'https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=';
 
@@ -21,30 +24,25 @@ function setup() {
         // IGNORE let len = data[1].length;
         // IGNORE let index = floor(random(len)); -->randomise choice
         let len = data[1].length;
-        var collectionData = data[1]
+        collectionData = data[1] //global variable
         console.log(len);
-        let counter = 0;
-        //var allTitles = []
-        //while (counter < len) {
-        //    var title = data[1][counter]; // chose the first suggestion on the list
-        //    counter +=1 ;        
-        //    allTitles.push(title)
-        //}        
         collectionData.forEach(printEach); // to print options on webpg
         function printEach(title, index){ // function to print options
             document.getElementById('options').innerHTML += index +":" + title + '<br>';
         }
         console.log(collectionData); //print list of options in console
-
-        //indexSelected = document.getElementById('optionsSelect').options.selectedIndex;
-        //console.log(indexSelected)
-        selectedTitle = collectionData[0]
-        selectedTitle = selectedTitle.replace('/\s+/g', '_'); // sth todo with changing the format of the url  to enable      searching through wikipedia (pls correct me if i'm wrong...)
-        createDiv(selectedTitle);
-        console.log('Querying: ' + selectedTitle); // to show what youaresearching for
-        let urlExtractcontent = urlforContent + selectedTitle;
-        loadJSON(urlExtractcontent, gotContent, 'jsonp');
     }
+}
+
+function someFunction(){
+    indexSelected = document.getElementById('optionsSelect').options.selectedIndex;
+    console.log(indexSelected)
+    selectedTitle = collectionData[indexSelected]
+    selectedTitle = selectedTitle.replace('/\s+/g', '_'); // sth todo with changingthe format of the url  to enable      searching through wikipedia (pls correctme if i'm wrong...)
+    createDiv(selectedTitle);
+    console.log('Querying: ' + selectedTitle); // to show what youaresearching for
+    let urlExtractcontent = urlforContent + selectedTitle;
+    loadJSON(urlExtractcontent, gotContent, 'jsonp');
 
     function gotContent(data){
         let page = data.query.pages;
@@ -54,5 +52,4 @@ function setup() {
         document.getElementById('contentDisplay').innerHTML =content;
     }
 }
-
 
