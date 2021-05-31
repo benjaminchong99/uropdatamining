@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 33%;
+            padding: 10px;
+
+        }
+        .SearchingArea1{
+            float: left;
+        }
+        .SearchingArea2{
+            float: middle;
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> <!-- what is shown on the tab-->
+    <script src= 'extraction310521.js' defer></script>
+    <script src="p5.js"></script>
+    <script src="p5.sound.js"></script>
+    <script src="sketch.js"></script> 
+</head>
+<body>
+    <h1>Testing on Wikipedia </h1>
+    <p id= search> 
+        Search Here: <input id='userinput'>
+        <button onclick="setup()">Enter</button>
+    </p>
+
+    <div class = 'row'>
+        <div class = 'column', id= SearchingArea1>
+            <p id = titledym><b>Do You Mean:</b></p>    
+            <form id = form>
+                <select id = optionsSelect size ="10";>
+                    <option id = 'option_0'></option>
+                       <option id = 'option_1'></option>
+                    <option id = 'option_2'></option>
+                    <option id = 'option_3'></option>
+                    <option id = 'option_4'></option>
+                    <option id = 'option_5'></option>
+                    <option id = 'option_6'></option>
+                    <option id = 'option_7'></option>
+                    <option id = 'option_8'></option>
+                    <option id = 'option_9'></option>
+                </select>
+            </form>
+            <button onclick = "someFunction()">Find!</button>
+        </div>
+        <div class= 'column', id = SearchingArea2>
+            <h3>Search History</h3>
+            <p id = searchedWords></p>
+            <p id = titleSH><u><b>Searching...</b></u></p>
+            <p id = wordSearched></p>
+            <header><i>Check out more here: </i></header>
+            <p id = getLink></p>
+        </div>
+        <div class="column", id = SearchingArea3>
+            <header><u>Results</u></header>
+            <p id =contentDisplay></p>        
+        </div>
+    </div>
+
+    <div id =Suggestion> You may be interested in: </div>
+</body>
+</html>
