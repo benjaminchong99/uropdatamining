@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .row {
+            display: flex;
+            
+        }
+
+        .leftcolumn {
+            float: left;
+            width: 33%;
+        }
+
+        .middlecolumn{
+            float: middle;
+            width: 33%;
+        }
+
+        .rightcolumn {
+            float: right;
+            width: 33%;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> <!-- what is shown on the tab-->
+    <script src= 'newextraction.js' defer></script>
+    <script src="p5.js"></script>
+    <script src="p5.sound.js"></script>
+    <script src="sketch.js"></script> 
+</head>
+<body>
+    <h1>Testing on Wikipedia </h1>
+    <p id= search> 
+        Search Here: <input id='userinput'>
+        <button onclick="setup()">Enter</button>
+    </p>
+
+    <div class = 'row'>
+        <div class = 'leftcolumn'>
+            <p id = titledym><b>Do You Mean:</b></p>    
+            <form id = form>
+                <select id = optionsSelect , size ="10";>
+                    <option id = 'option_0'></option>
+                    <option id = 'option_1'></option>
+                    <option id = 'option_2'></option>
+                    <option id = 'option_3'></option>
+                    <option id = 'option_4'></option>
+                    <option id = 'option_5'></option>
+                    <option id = 'option_6'></option>
+                    <option id = 'option_7'></option>
+                    <option id = 'option_8'></option>
+                    <option id = 'option_9'></option>
+                </select>
+            </form>
+            <button onclick = "goldenButton()">Find!</button>
+        </div>
+        <div class= 'middlecolumn'>
+            <h3>Search History</h3>
+            <p id = searchedWords></p>
+            <p id = titleSH><u><b>Searching...</b></u></p>
+            <p id = wordSearched></p>
+            <header id = getLink><i>Check out more here: </i></header>
+        </div>
+        <div class='rightcolumn'>
+            <fieldset>
+                <legend>Results</legend>
+                <p id =contentDisplay></p> 
+                <div class = image >
+                    <image id = imghtml style="max-width: 100%;"></image>   
+                </div>
+            </fieldset>     
+        </div>
+    </div>
+
+    <div class = 'row'>
+        <header>You might be interested in these too:</header>
+        <form id = suggestions >
+            <select id = selectSuggestion size = 5>
+                <option id = suggestion_1>1</option>
+                <option id = suggestion_2>2</option>
+                <option id = suggestion_3>3</option>
+                <option id = suggestion_4>4</option>
+                <option id = suggestion_5>5</option>
+            </select>
+        </form>
+    </div>
+    <div class = 'row'>
+        <header>Options</header>
+    </div>
+</body>
+</html>
+
