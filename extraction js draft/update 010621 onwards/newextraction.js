@@ -8,6 +8,10 @@ function setup() {
     //userInput = select("#userinput");
     termTosearch = userInput.value
     console.log(userInput.value)
+    startSearch(termTosearch);
+}
+
+function startSearch(termTosearch) {
    
     encodedTermtoSearch = encodeURI(termTosearch)
 
@@ -15,9 +19,6 @@ function setup() {
 
     let urlforContent = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodedTermtoSearch}&format=json`
     console.log(urlforContent)
-   
-   
-   
     
     loadJSON(urlforContent, gotContent, 'jsonp'); //load content
 }
@@ -30,13 +31,6 @@ function gotContent(data){
     console.log(data);
     optionsAvailable = data.query.search;
     optionsAvailable.forEach(optionsmaybe)
-
-    let page = optionsAvailable[0];        
-    console.log(page);
-    pageID = page['pageid'];
-    console.log(pageID);
-    let content = page['snippet'];
-    console.log(content);
 }
 // ***END OF gotContent FUNCTION***
 
@@ -98,4 +92,36 @@ function gotImage(data){
     img = document.createElement('img'); 
     img.src = imageplease; 
 	document.getElementById('imghtml').src = imageplease;
+    getSuggestions()
+}
+
+
+function getSuggestions(){
+    urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
+    loadJSON(urlSuggestions, findSuggestions, 'jsonp'); //load content
+}
+
+function findSuggestions(data){
+    helloSuggestions = JSON.stringify(data);
+    console.log(helloSuggestions);
+    
+    let links = helloSuggestions.match(/\[\[([^\]]*)\]\]/g)
+    cleanedLinks = []
+    links.forEach(element => {
+        cleanedLinks.push(element.replace( /(^.*\[|\].*$)/g, ''));
+    });
+    console.log(links);
+
+    suggestedList = cleanedLinks.slice(0,15)
+    suggestedList.forEach(createSuggestions);        
+    function createSuggestions(element, index) {
+        suggestedID = `suggestion_${index}`
+        document.getElementById(suggestedID).innerHTML = element
+    }    
+}
+
+function suggestionButton(){
+    indexSuggestion = document.getElementById('selectSuggestion').options.selectedIndex;
+    termTosearch = suggestedList[indexSuggestion];
+    startSearch(termTosearch);
 }
