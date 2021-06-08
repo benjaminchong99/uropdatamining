@@ -239,7 +239,7 @@ function backupImage(encodedWordAgain){
         myDump = JSON.stringify(data)
 
         lolsStart = myDump.indexOf('//upload')
-        lolsEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\" decoding/)
+        lolsEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\("\)|" decoding)/)
         url = myDump.substring(lolsStart+2,lolsEnd+4)
         console.log(lolsStart, lolsEnd)
         console.log(url)
