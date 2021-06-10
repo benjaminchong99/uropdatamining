@@ -286,7 +286,7 @@ function displaySuggestion(suggestionSelected){
 
 /*** END OF GROUP 3: SEARCH SUGGESTED WORD
  * SHOULD HAVE PROVIDED SUGGESTED RESULT, UPDATE ORD HISTORY, UPDATE HYPERLINK, CHANGE CURRENT BOX INTO A LIST OF NEW SUGGESTIONS 
- */
+ ***/
 
 function previousButton(){
     // this function should allow user to go back to the previous suggestion to find out more?

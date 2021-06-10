@@ -2,23 +2,14 @@
 <html lang="en">
 <head>
     <style>
-        .row {
+        .row{
             display: flex;
-            
-        }
 
-        .leftcolumn {
-            float: left;
-            width: 33%;
         }
-
-        .middlecolumn{
-            width: 33%;
-        }
-
-        .rightcolumn {
-            float: right;
-            width: 33%;
+        
+        .column {
+            padding: 10px;
+            width:33%;
         }
     </style>
     <meta charset="UTF-8">
@@ -38,70 +29,73 @@
     </p>
 
     <div class = 'row'>
-        <div class = 'leftcolumn'>
-            <p id = titledym><b>Do You Mean:</b></p>    
-            <form id = form>
-                <select id = optionsSelect , size ="10";>
-                    <option id = 'option_0'></option>
-                    <option id = 'option_1'></option>
-                    <option id = 'option_2'></option>
-                    <option id = 'option_3'></option>
-                    <option id = 'option_4'></option>
-                    <option id = 'option_5'></option>
-                    <option id = 'option_6'></option>
-                    <option id = 'option_7'></option>
-                    <option id = 'option_8'></option>
-                    <option id = 'option_9'></option>
-                </select>
-            </form>
-            <button onclick = "goldenButton()">Find!</button>
+        <div class ="column">
+            <fieldset>
+                <legend><b>Do You Mean</b></legend>
+                <form id = form>
+                    <select id = optionsSelect , size ="10">
+                        <option id = 'option_0'></option>
+                        <option id = 'option_1'></option>
+                        <option id = 'option_2'></option>
+                        <option id = 'option_3'></option>
+                        <option id = 'option_4'></option>
+                        <option id = 'option_5'></option>
+                        <option id = 'option_6'></option>
+                        <option id = 'option_7'></option>
+                        <option id = 'option_8'></option>
+                        <option id = 'option_9'></option>
+                    </select>
+                </form>
+                <button onclick = "goldenButton()">Find!</button>
+            </fieldset>
+
+            <fieldset>
+                <legend><b>You might be interested in these too</b></legend>
+                <form id = suggestions >
+                    <select id = selectSuggestion size = 5>
+                        <option id = suggestion_0></option>
+                        <option id = suggestion_1></option>
+                        <option id = suggestion_2></option>
+                        <option id = suggestion_3></option>
+                        <option id = suggestion_4></option>
+                        <option id = suggestion_5></option>
+                        <option id = suggestion_6></option>
+                        <option id = suggestion_7></option>
+                        <option id = suggestion_8></option>
+                        <option id = suggestion_9></option>
+                        <option id = suggestion_10></option>
+                        <option id = suggestion_11></option>
+                        <option id = suggestion_12></option>
+                        <option id = suggestion_13></option>
+                        <option id = suggestion_14></option>                
+                    </select>
+                </form>
+                <button onclick = "suggestionButton()">Check it out!</button>
+                <button onclick = "previousButton()"><<<\Previous</button>
+            </fieldset>
         </div>
-        <div class= 'middlecolumn'>
-            <h3><u>Search History</u></h3>
-            <h4><b>Word/Phrase</b></h4>
-            <p id = searchedWords></p>
-            <h4><b>Suggestion</b></h4>
-            <p id = listSuggest></p>
-            <p id = titleSH><u><b>Searching...</b></u></p>
-            <p id = wordSearched></p>
-            <p><i>Check out more here: </i></p>
-            <p id = getLink><i></i></p>
+        <div class ="column">
+            <fieldset>
+                <legend>Search History</legend>
+                <h4><b>Word/Phrase</b></h4>
+                <p id = searchedWords></p>
+                <h4><b>Suggestion</b></h4>
+                <p id = listSuggest></p>
+                <p id = titleSH><u><b>Searching...</b></u></p>
+                <p id = wordSearched></p>
+                <p><i>Check out more here: </i></p>
+                <p id = getLink><i></i></p>
+            </fieldset>
         </div>
-        <div class='rightcolumn'>
+        <div class ="column">
             <fieldset>
                 <legend>Results</legend>
                 <p id =contentDisplay></p> 
                 <div class = image >
-                    <image id = imghtml style="max-width: 100%;"></image>   
+                    <image id = imghtml style="max-width: 70%;"></image>   
                 </div>
-            </fieldset>     
+            </fieldset>
         </div>
-    </div>
-
-    <div class = 'row'>
-        <header>You might be interested in these too:</header>
-        <form id = suggestions >
-            <select id = selectSuggestion size = 5>
-                <option id = suggestion_0></option>
-                <option id = suggestion_1></option>
-                <option id = suggestion_2></option>
-                <option id = suggestion_3></option>
-                <option id = suggestion_4></option>
-                <option id = suggestion_5></option>
-                <option id = suggestion_6></option>
-                <option id = suggestion_7></option>
-                <option id = suggestion_8></option>
-                <option id = suggestion_9></option>
-                <option id = suggestion_10></option>
-                <option id = suggestion_11></option>
-                <option id = suggestion_12></option>
-                <option id = suggestion_13></option>
-                <option id = suggestion_14></option>                
-            </select>
-        </form>
-        <button onclick = "suggestionButton()">Check it out!</button>
-    </div>
-    <button onclick = "previousButton()"><<<\Previous</button> 
     </div>
 </body>
 </html>
