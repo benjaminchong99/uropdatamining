@@ -1,0 +1,16 @@
+.documentTitle {
+  color: navy;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  padding: 10px;
+  width: 33%;
+}
+
+.header {
+  color: orange;
+}

@@ -1,17 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        .row{
-            display: flex;
+    <link rel="stylesheet" href="style.css">
 
-        }
-        
-        .column {
-            padding: 10px;
-            width:33%;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +13,7 @@
     <script src="sketch.js"></script> 
 </head>
 <body>
-    <h1>Testing on Wikipedia </h1>
+    <h1 class = "documentTitle">UROP: Data Mining</h1>
     <p id= search> 
         Search Here: <input id='userinput'>
         <button onclick="setup()">Enter</button>
@@ -77,15 +68,15 @@
         <div class ="column">
             <fieldset>
                 <legend>Search History</legend>
-                <h4><b>Word/Phrase</b></h4>
+                <a><i>Click on hyperlink to find out more!</i></a>
+                <h4 class="header"><b>Word/Phrase</b></h4>
                 <p id = searchedWords></p>
-                <h4><b>Suggestion</b></h4>
+                <h4 class="header"><b>Suggestion</b></h4>
                 <p id = listSuggest></p>
-                <p id = titleSH><u><b>Searching...</b></u></p>
+                <p class="header"><u><b>Searching...</b></u></p>
                 <p id = wordSearched></p>
-                <p><i>Check out more here: </i></p>
-                <p id = getLink><i></i></p>
             </fieldset>
+            <button onclick = 'clearHistory()'>Clear All Search history</button>
         </div>
         <div class ="column">
             <fieldset>
@@ -97,6 +88,7 @@
             </fieldset>
         </div>
     </div>
+    <button onclick="createInfobox()">Test</button>
 </body>
 </html>
 

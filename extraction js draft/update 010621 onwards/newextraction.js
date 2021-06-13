@@ -1,7 +1,9 @@
 let optionsAvailable = null;
 let wordHistory = [];
+let wordHistoryLinked = [];
 let listSuggestions = [];
-let displaySuggestions = [];
+let listSuggestionsLinked = [];
+let finallyPageid = null;
 let pageID = null;
 
 /**GROUP 1: SEARCH BAR */
@@ -52,6 +54,8 @@ function optionsmaybe(element, index){ // DEF REQ FOR LATER
 function goldenButton(){
     indexSelected = document.getElementById('optionsSelect').options.selectedIndex;
     selectedOption = optionsAvailable[indexSelected];
+    OptionTitle = selectedOption['title'];
+    listSuggestions = [];
     console.log(selectedOption); // END OF SELECTING OPTION
 
     pageID = selectedOption['pageid'];
@@ -66,12 +70,9 @@ function goldenButton(){
 
     /** SECTION FOR HYPERLINK */
     hyperlink = `https://en.wikipedia.org/wiki/${encodedOption}`;
-    //document.getElementById('getLink').innerHTML = hyperlink;
-    WikiLink(hyperlink); //get hyperlink
 
     /** SECTION FOR SEARCH HISTORY */
-    OptionTitle = selectedOption['title'];
-    displayHistory(OptionTitle);
+    displayHistory(OptionTitle, hyperlink);
 
     /** SECTION TO GET IMAGE */
     endpoint = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedOption}&origin=*`;
@@ -87,17 +88,15 @@ function goldenButton(){
 
 
 /**recurring function */
-function WikiLink(hyperlink) { //func req to get & show hyperlink
-    var str = hyperlink;
-    var result = str.link(hyperlink);
-    document.getElementById("getLink").innerHTML = result;
-}   
-
-
-/**recurring function */
-function displayHistory(OptionTitle) {
-    wordHistory.push(OptionTitle + ' ');
-    document.getElementById('searchedWords').innerHTML = wordHistory; //get wordHistory
+function displayHistory(OptionTitle, hyperlink) {
+    if (wordHistory.includes(OptionTitle + ' ')=== true){
+        console.log('running omit')
+    } else {
+        OptionTitleLinked = OptionTitle.link(hyperlink);
+        wordHistory.push(OptionTitle + ' ')
+        wordHistoryLinked.push(OptionTitleLinked + ' ');
+        document.getElementById('searchedWords').innerHTML = wordHistoryLinked; //get wordHistory
+    }
 }
 
 
@@ -114,8 +113,6 @@ function getTwoSentences(data) {
     console.log(data);
     finaltwoSentences = data.query.pages[0]['extract'];
     document.getElementById('contentDisplay').innerHTML = finaltwoSentences;
-
-    // if finl 2 sentences cannot, jump to search content, choose [0], find content
 }
 
 
@@ -184,7 +181,6 @@ function getSuggestions(encodedOption){
 
 function findSuggestions(data){
     helloSuggestions = JSON.stringify(data);
-    //console.log(helloSuggestions);
 
     // find all suggested words in full content
     let links = helloSuggestions.match(/\[\[([^\]]*)\]\]/g);
@@ -192,7 +188,6 @@ function findSuggestions(data){
     links.forEach(element => {
         cleanedLinks.push(element.replace( /(^.*\[|\].*$)/g, ''));
     });
-    //console.log(links);
     slicedLinks = [];
     slicedLinks = descendingUniqueSort(cleanedLinks).slice(0,15);
     console.log(slicedLinks);// take the top 15 linked words
@@ -255,33 +250,33 @@ function runTestandSearch(suggestionSelected){
         indextoRemove = suggestionSelected.indexOf('|');
         suggestionSelected = suggestionSelected.substring(0,indextoRemove);
     };
-
     encodedSuggestion = encodeURIComponent(suggestionSelected);
     console.log('Querying: ' +suggestionSelected, encodedSuggestion);
-    displaySuggestion(suggestionSelected); // update search history
     twoSentences(encodedSuggestion);
     
     imageSuggestion = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedSuggestion}&origin=*`;
-
+    
     loadJSON(imageSuggestion, gotImage, 'jsonp'); // to extract image
-
+    
     hyperlinkSuggestion = `https://en.wikipedia.org/wiki/${encodedSuggestion}`;
-    WikiLink(hyperlinkSuggestion); // to extract hyperlink
+    displaySuggestion(suggestionSelected, hyperlinkSuggestion); // update search history
 
     getSuggestions(encodedSuggestion);
 }
 
 
-function displaySuggestion(suggestionSelected){
+function displaySuggestion(suggestionSelected, hyperlinkSuggestion) {
+    console.log(wordHistory)
     if (listSuggestions[listSuggestions.length-1] ===suggestionSelected){
 
-    }else if (wordHistory[wordHistory.length-1] ===suggestionSelected){
+    }else if (wordHistory[wordHistory.length-1] ===suggestionSelected + ' '){
 
     }else{
+        suggestionSelectedLinked = suggestionSelected.link(hyperlinkSuggestion)
         listSuggestions.push(suggestionSelected);
-        displaySuggestions.push(suggestionSelected);
+        listSuggestionsLinked.push(suggestionSelectedLinked);
+        document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
     }
-    document.getElementById('listSuggest').innerHTML = displaySuggestions
 }
 
 /*** END OF GROUP 3: SEARCH SUGGESTED WORD
@@ -293,10 +288,9 @@ function previousButton(){
     listSuggestions.pop();
     if (listSuggestions.length < 1){
         console.log("empty")
-        currentSearch = wordHistory[wordHistory.length-1]
-        runTestandSearch(currentSearch)
+        runTestandSearch(OptionTitle)
         listSuggestions = []
-        document.getElementById('wordSearched').innerHTML = currentSearch
+        document.getElementById('wordSearched').innerHTML = OptionTitle
     } else{
         lastTerm = listSuggestions.length -1
         console.log(listSuggestions.length)
@@ -304,4 +298,86 @@ function previousButton(){
         document.getElementById('wordSearched').innerHTML = prevSelection
         runTestandSearch(prevSelection)
     }
+}
+
+function clearHistory(){
+    wordHistory = [];
+    wordHistoryLinked = [];
+    listSuggestions = [];
+    listSuggestionsLinked = [];
+    document.getElementById('searchedWords').innerHTML = wordHistoryLinked 
+    document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
+    document.getElementById('wordSearched').innerHTML = ''
+}
+
+
+
+/** version 2 */
+function createInfobox(){
+    wordInfobox = 'Michael Bay';
+    //wordInfobox = document.getElementById('wordSearched')
+    encodedwordInfobox = encodeURIComponent(wordInfobox)
+    urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
+    loadJSON(urlGetPageid, infoboxPageid, 'jsonp')
+}
+
+function infoboxPageid(data) {
+    findingPageid = JSON.stringify(data)
+    console.log(findingPageid)
+    pageidStart = findingPageid.indexOf('"pageid":')
+    pageidEnd = findingPageid.indexOf('"ns":')
+    console.log(pageidStart, pageidEnd)
+    finallyPageid = findingPageid.substring(pageidStart+9, pageidEnd-1)
+    console.log('in function: ',finallyPageid)
+    runTable(finallyPageid)
+}
+
+function runTable(finallyPageid){
+    urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
+    console.log('running test')
+    loadJSON(urlFindTable, infoboxContent, 'jsonp')
+}
+
+function infoboxContent(data){
+    myInfoboxstr = JSON.stringify(data)
+    infoboxStart = myInfoboxstr.indexOf('{Infobox')
+    infoboxEnd = myInfoboxstr.indexOf('\\n}}\\n')
+    myInfobox = myInfoboxstr.substring(infoboxStart, infoboxEnd+3)
+    console.log(myInfobox)
+
+    if (infoboxStart === -1){
+        console.log('No infotable available')
+    } else{
+        /** SECTION TO FIND TITLES AND VALUES FOR THE INFOBOX */
+        // find the titles
+        listofTitles = []
+        findAllTitles =myInfobox.match((/\| +\w*/g))
+        findAllTitles.forEach(element => {
+            listofTitles.push(element.replace(/\|\s/g,''))
+        })
+        // in between = and /n
+        
+        // to find starting point '='
+        var regexvalueStart = /=/g, result, indicesvalueStart =[];
+        while ((result = regexvalueStart.exec(myInfobox))) {
+            indicesvalueStart.push(result.index)
+        }
+        // to find ending point '\n'
+        var regexvalueEnd = /\\n/g, result, indicesvalueEnd =[];
+        while ((result = regexvalueEnd.exec(myInfobox))) {
+            indicesvalueEnd.push(result.index)
+        }
+        indicesvalueEnd.shift()
+        console.log('Start: ', indicesvalueStart)
+        console.log("End: ", indicesvalueEnd)
+        //find the values in infobox
+        listofValues = []
+        for (i=0; i<indicesvalueEnd.length; i++) {
+            values = myInfobox.substring(indicesvalueStart[i]+2, indicesvalueEnd[i]);
+            listofValues.push(values)
+        }
+        console.log('Titles: ', listofTitles, listofTitles.length)
+        console.log('Values: ', listofValues, listofValues.length)
+    }
+
 }
