@@ -68,6 +68,9 @@ function goldenButton(){
     /**SECTION FOR TWO SENTENCES */
     twoSentences(encodedOption);
 
+    /**SECTION FOR INFOBOX */
+    createInfobox(OptionTitle)
+    
     /** SECTION FOR HYPERLINK */
     hyperlink = `https://en.wikipedia.org/wiki/${encodedOption}`;
 
@@ -253,6 +256,7 @@ function runTestandSearch(suggestionSelected){
     encodedSuggestion = encodeURIComponent(suggestionSelected);
     console.log('Querying: ' +suggestionSelected, encodedSuggestion);
     twoSentences(encodedSuggestion);
+    createInfobox(suggestionSelected)
     
     imageSuggestion = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedSuggestion}&origin=*`;
     
@@ -313,11 +317,13 @@ function clearHistory(){
 
 
 /** version 2 */
-function createInfobox(){
-    wordInfobox = 'Michael Bay';
+function createInfobox(inputphrase){
+    wordInfobox = inputphrase
     //wordInfobox = document.getElementById('wordSearched')
+    console.log(wordInfobox)
     encodedwordInfobox = encodeURIComponent(wordInfobox)
     urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
+    console.log(urlGetPageid)
     loadJSON(urlGetPageid, infoboxPageid, 'jsonp')
 }
 
@@ -334,50 +340,105 @@ function infoboxPageid(data) {
 
 function runTable(finallyPageid){
     urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
-    console.log('running test')
+    console.log('running test', urlFindTable)
     loadJSON(urlFindTable, infoboxContent, 'jsonp')
 }
 
 function infoboxContent(data){
     myInfoboxstr = JSON.stringify(data)
     infoboxStart = myInfoboxstr.indexOf('{Infobox')
-    infoboxEnd = myInfoboxstr.indexOf('\\n}}\\n')
+    infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n\\n'''/g) /**VERY IMPORTANT REGEX HERE! */
+    console.log(infoboxStart, infoboxEnd)
     myInfobox = myInfoboxstr.substring(infoboxStart, infoboxEnd+3)
     console.log(myInfobox)
 
-    if (infoboxStart === -1){
-        console.log('No infotable available')
+    /**HERE ONNWARDS IS CREATION OF INFOTABLE */
+    if (infoboxStart === -1| infoboxEnd === -1){
+            thegoldenTable = document.getElementById('infoTable')
+            thegoldenTable.innerHTML=''
+            nothingRow = thegoldenTable.insertRow(0)
+            nothingRow.innerHTML ="No infobox available"
+            console.log("If you expected sth, go check the api") // for checking
+        
     } else{
         /** SECTION TO FIND TITLES AND VALUES FOR THE INFOBOX */
-        // find the titles
-        listofTitles = []
-        findAllTitles =myInfobox.match((/\| +\w*/g))
-        findAllTitles.forEach(element => {
-            listofTitles.push(element.replace(/\|\s/g,''))
+        listofCategories = []
+        findAllCat =myInfobox.match(/\|\s(.*?)\\n/g) // requires more specific approach
+        findAllCat.forEach(element => {
+            listofCategories.push(element.replace(/\|\s/g,''))
         })
         // in between = and /n
-        
-        // to find starting point '='
-        var regexvalueStart = /=/g, result, indicesvalueStart =[];
-        while ((result = regexvalueStart.exec(myInfobox))) {
-            indicesvalueStart.push(result.index)
-        }
-        // to find ending point '\n'
-        var regexvalueEnd = /\\n/g, result, indicesvalueEnd =[];
-        while ((result = regexvalueEnd.exec(myInfobox))) {
-            indicesvalueEnd.push(result.index)
-        }
-        indicesvalueEnd.shift()
-        console.log('Start: ', indicesvalueStart)
-        console.log("End: ", indicesvalueEnd)
-        //find the values in infobox
-        listofValues = []
-        for (i=0; i<indicesvalueEnd.length; i++) {
-            values = myInfobox.substring(indicesvalueStart[i]+2, indicesvalueEnd[i]);
-            listofValues.push(values)
-        }
-        console.log('Titles: ', listofTitles, listofTitles.length)
-        console.log('Values: ', listofValues, listofValues.length)
-    }
+        console.log('Categories: ', listofCategories)
+        /** EMERGENCY CHECK: UP TILL HERE IT IS STILL CORRECT */
 
+        listTitles = []
+        listValues = []
+        for (i=0; i<listofCategories.length; i++) {
+            findTitles = listofCategories[i].match(/\w+\s+=/g)
+            findValues = listofCategories[i].replace(findTitles[0],'=')
+            a_Value = findValues.substring(1,findValues.length-2)
+            listTitles.push(findTitles[0].replace(/\s+=/g, ''))
+            listValues.push(a_Value)
+        }
+        console.log('Titles: ', listTitles)
+        console.log('Values: ', listValues)
+
+        /** EMERGENCY CHECK: CHECK UP TILL THIS PORTION */
+
+        while (listValues.includes('')) {
+            removeindex = listValues.indexOf('')
+            listValues.pop(listValues[removeindex])
+            listTitles.pop(listTitles[removeindex])
+        }
+
+        for (i = 0; i < listTitles.length; i++) {
+            /**cleaning title */
+            if (listTitles[i].includes('_') == true) {
+                listTitles[i] = listTitles[i].replace('_', ' ')
+            }
+            
+            /**cleanning values */
+            listValues[i] = listValues[i].replace(/(\{\{\w+\|)/g, '')
+            listValues[i] = listValues[i].replace(/([\\\[\]\{\}])/g, '')
+        }
+
+        //cleanedlistValues = []
+        //listValues.forEach(element => {
+        //    cleanedlistValues.push(element.replace( /(^.*\[|\].*$)/g, ''))
+        //    // (^.*\[|\].*$
+        //})
+        //console.log(cleanedlistValues)
+
+        console.log(listTitles)
+        console.log(listValues)
+        thegoldenTable = document.getElementById('infoTable')
+        thegoldenTable.innerHTML=''
+
+        for (i=0; i<listTitles.length; i++){ 
+            if (listValues[i]===''){
+                //pass
+            } else{
+                rowName = `row${i}`
+                row = thegoldenTable.insertRow(-1)
+                cell1 = row.insertCell(0)
+                cell1.setAttribute('id', 'Title')
+                cell2 = row.insertCell(1)
+                cell1.innerHTML = listTitles[i]
+                cell2.innerHTML = listValues[i]
+            }
+        }
+        
+        if (thegoldenTable.rows[0].cells[0].innerHTML === 'Categories'){
+            //pass
+        }else {
+            row = thegoldenTable.insertRow(0)
+            header1 = row.insertCell(0)
+            header2 = row.insertCell(1)
+            header1.innerHTML = "Categories"
+            header2.innerHTML = "Details"
+        }
+
+    }
 }
+
+// todo: need to remove unnecessary symbols from infobox values
