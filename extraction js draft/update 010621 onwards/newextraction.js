@@ -288,7 +288,7 @@ function displaySuggestion(suggestionSelected, hyperlinkSuggestion) {
  ***/
 
 function previousButton(){
-    // this function should allow user to go back to the previous suggestion to find out more?
+    // this function should allow user to go back to the previous suggestion to find out more
     listSuggestions.pop();
     if (listSuggestions.length < 1){
         console.log("empty")
@@ -347,7 +347,8 @@ function runTable(finallyPageid){
 function infoboxContent(data){
     myInfoboxstr = JSON.stringify(data)
     infoboxStart = myInfoboxstr.indexOf('{Infobox')
-    infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n\\n'''/g) /**VERY IMPORTANT REGEX HERE! */
+    infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n\\n'''/g) 
+    /**VERY IMPORTANT REGEX HERE! */
     console.log(infoboxStart, infoboxEnd)
     myInfobox = myInfoboxstr.substring(infoboxStart, infoboxEnd+3)
     console.log(myInfobox)
@@ -362,12 +363,22 @@ function infoboxContent(data){
         
     } else{
         /** SECTION TO FIND TITLES AND VALUES FOR THE INFOBOX */
+        startingPoint = myInfobox.indexOf("\\n|")
+        myInfobox = myInfobox.substring(startingPoint+4,myInfobox.length)
+        
         listofCategories = []
-        findAllCat =myInfobox.match(/\|\s(.*?)\\n/g) // requires more specific approach
-        findAllCat.forEach(element => {
-            listofCategories.push(element.replace(/\|\s/g,''))
-        })
-        // in between = and /n
+
+        /**Step below: loop to find "\n|" one by one until there's none left */
+        while (myInfobox.search(/\\n\|/g) != -1){
+            endCat = myInfobox.indexOf("\\n|")
+            one_cat = myInfobox.substring(0,endCat+3)
+            listofCategories.push(one_cat)
+            myInfobox = myInfobox.replace(one_cat,"")
+        }
+
+        if (myInfobox.length != 0){
+            listofCategories.push(myInfobox)
+        }
         console.log('Categories: ', listofCategories)
         /** EMERGENCY CHECK: UP TILL HERE IT IS STILL CORRECT */
 
@@ -375,8 +386,9 @@ function infoboxContent(data){
         listValues = []
         for (i=0; i<listofCategories.length; i++) {
             findTitles = listofCategories[i].match(/\w+\s+=/g)
-            findValues = listofCategories[i].replace(findTitles[0],'=')
-            a_Value = findValues.substring(1,findValues.length-2)
+            findValues = listofCategories[i].replace(findTitles[0],'')
+            a_Value = findValues.substring(0,findValues.length-2)
+
             listTitles.push(findTitles[0].replace(/\s+=/g, ''))
             listValues.push(a_Value)
         }
@@ -384,13 +396,14 @@ function infoboxContent(data){
         console.log('Values: ', listValues)
 
         /** EMERGENCY CHECK: CHECK UP TILL THIS PORTION */
-
+        /**KIV THIS, MIGHT BE REDUDANT */
         while (listValues.includes('')) {
             removeindex = listValues.indexOf('')
             listValues.pop(listValues[removeindex])
             listTitles.pop(listTitles[removeindex])
         }
-
+        /** */
+        /**CLEANING BELOW */
         for (i = 0; i < listTitles.length; i++) {
             /**cleaning title */
             if (listTitles[i].includes('_') == true) {
@@ -400,6 +413,16 @@ function infoboxContent(data){
             /**cleanning values */
             listValues[i] = listValues[i].replace(/(\{\{\w+\|)/g, '')
             listValues[i] = listValues[i].replace(/([\\\[\]\{\}])/g, '')
+            //listValues[i] = listValues[i].substring(/\w.*/g)
+            listValues[i] = listValues[i].replace("n*", '')
+            callstop = false
+            while (callstop == false) {
+                if (listValues[i].indexOf("n*") != -1){
+                    listValues[i] = listValues[i].replace("n*", '; ')
+                } else{
+                    callstop = true
+                }
+            }
         }
 
         //cleanedlistValues = []
