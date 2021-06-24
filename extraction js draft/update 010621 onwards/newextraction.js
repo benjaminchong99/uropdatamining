@@ -1,7 +1,8 @@
 let optionsAvailable = null;
 let wordHistory = [];
 let wordHistoryLinked = [];
-let listSuggestions = [];
+let listSuggestions = []; //req for previous function to work
+let suggestionHistory = [];
 let listSuggestionsLinked = [];
 let finallyPageid = null;
 let pageID = null;
@@ -245,11 +246,7 @@ function suggestionButton(){ //Search the suggestion
 };
 
 function runTestandSearch(suggestionSelected){
-    test = suggestionSelected.match(/\|/g);
-    
-    if (test === null) {
-
-    }else{
+    if (suggestionSelected.includes("|")){
         indextoRemove = suggestionSelected.indexOf('|');
         suggestionSelected = suggestionSelected.substring(0,indextoRemove);
     };
@@ -271,15 +268,20 @@ function runTestandSearch(suggestionSelected){
 
 function displaySuggestion(suggestionSelected, hyperlinkSuggestion) {
     console.log(wordHistory)
-    if (listSuggestions[listSuggestions.length-1] ===suggestionSelected){
+    if (listSuggestions.includes(suggestionSelected) ===true){
 
     }else if (wordHistory[wordHistory.length-1] ===suggestionSelected + ' '){
 
     }else{
         suggestionSelectedLinked = suggestionSelected.link(hyperlinkSuggestion)
         listSuggestions.push(suggestionSelected);
-        listSuggestionsLinked.push(suggestionSelectedLinked);
-        document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
+        if (suggestionHistory.includes(suggestionSelected)===true){
+
+        } else{
+            suggestionHistory.push(suggestionSelected);
+            listSuggestionsLinked.push(suggestionSelectedLinked);    
+        };
+        document.getElementById('listSuggest').innerHTML = listSuggestionsLinked;
     }
 }
 
@@ -309,6 +311,7 @@ function clearHistory(){
     wordHistoryLinked = [];
     listSuggestions = [];
     listSuggestionsLinked = [];
+    suggestionHistory = [];
     document.getElementById('searchedWords').innerHTML = wordHistoryLinked 
     document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
     document.getElementById('wordSearched').innerHTML = ''
@@ -316,152 +319,3 @@ function clearHistory(){
 
 
 
-/** version 2 */
-function createInfobox(inputphrase){
-    wordInfobox = inputphrase
-    //wordInfobox = document.getElementById('wordSearched')
-    console.log(wordInfobox)
-    encodedwordInfobox = encodeURIComponent(wordInfobox)
-    urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
-    console.log(urlGetPageid)
-    loadJSON(urlGetPageid, infoboxPageid, 'jsonp')
-}
-
-function infoboxPageid(data) {
-    findingPageid = JSON.stringify(data)
-    console.log(findingPageid)
-    pageidStart = findingPageid.indexOf('"pageid":')
-    pageidEnd = findingPageid.indexOf('"ns":')
-    console.log(pageidStart, pageidEnd)
-    finallyPageid = findingPageid.substring(pageidStart+9, pageidEnd-1)
-    console.log('in function: ',finallyPageid)
-    runTable(finallyPageid)
-}
-
-function runTable(finallyPageid){
-    urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
-    console.log('running test', urlFindTable)
-    loadJSON(urlFindTable, infoboxContent, 'jsonp')
-}
-
-function infoboxContent(data){
-    myInfoboxstr = JSON.stringify(data)
-    infoboxStart = myInfoboxstr.indexOf('{Infobox')
-    infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n\\n'''/g) 
-    /**VERY IMPORTANT REGEX HERE! */
-    console.log(infoboxStart, infoboxEnd)
-    myInfobox = myInfoboxstr.substring(infoboxStart, infoboxEnd+3)
-    console.log(myInfobox)
-
-    /**HERE ONNWARDS IS CREATION OF INFOTABLE */
-    if (infoboxStart === -1| infoboxEnd === -1){
-            thegoldenTable = document.getElementById('infoTable')
-            thegoldenTable.innerHTML=''
-            nothingRow = thegoldenTable.insertRow(0)
-            nothingRow.innerHTML ="No infobox available"
-            console.log("If you expected sth, go check the api") // for checking
-        
-    } else{
-        /** SECTION TO FIND TITLES AND VALUES FOR THE INFOBOX */
-        startingPoint = myInfobox.indexOf("\\n|")
-        myInfobox = myInfobox.substring(startingPoint+4,myInfobox.length)
-        
-        listofCategories = []
-
-        /**Step below: loop to find "\n|" one by one until there's none left */
-        while (myInfobox.search(/\\n\|/g) != -1){
-            endCat = myInfobox.indexOf("\\n|")
-            one_cat = myInfobox.substring(0,endCat+3)
-            listofCategories.push(one_cat)
-            myInfobox = myInfobox.replace(one_cat,"")
-        }
-
-        if (myInfobox.length != 0){
-            listofCategories.push(myInfobox)
-        }
-        console.log('Categories: ', listofCategories)
-        /** EMERGENCY CHECK: UP TILL HERE IT IS STILL CORRECT */
-
-        listTitles = []
-        listValues = []
-        for (i=0; i<listofCategories.length; i++) {
-            findTitles = listofCategories[i].match(/\w+\s+=/g)
-            findValues = listofCategories[i].replace(findTitles[0],'')
-            a_Value = findValues.substring(0,findValues.length-2)
-
-            listTitles.push(findTitles[0].replace(/\s+=/g, ''))
-            listValues.push(a_Value)
-        }
-        console.log('Titles: ', listTitles)
-        console.log('Values: ', listValues)
-
-        /** EMERGENCY CHECK: CHECK UP TILL THIS PORTION */
-        /**KIV THIS, MIGHT BE REDUDANT */
-        while (listValues.includes('')) {
-            removeindex = listValues.indexOf('')
-            listValues.pop(listValues[removeindex])
-            listTitles.pop(listTitles[removeindex])
-        }
-        /** */
-        /**CLEANING BELOW */
-        for (i = 0; i < listTitles.length; i++) {
-            /**cleaning title */
-            if (listTitles[i].includes('_') == true) {
-                listTitles[i] = listTitles[i].replace('_', ' ')
-            }
-            
-            /**cleanning values */
-            listValues[i] = listValues[i].replace(/(\{\{\w+\|)/g, '')
-            listValues[i] = listValues[i].replace(/([\\\[\]\{\}])/g, '')
-            //listValues[i] = listValues[i].substring(/\w.*/g)
-            listValues[i] = listValues[i].replace("n*", '')
-            callstop = false
-            while (callstop == false) {
-                if (listValues[i].indexOf("n*") != -1){
-                    listValues[i] = listValues[i].replace("n*", '; ')
-                } else{
-                    callstop = true
-                }
-            }
-        }
-
-        //cleanedlistValues = []
-        //listValues.forEach(element => {
-        //    cleanedlistValues.push(element.replace( /(^.*\[|\].*$)/g, ''))
-        //    // (^.*\[|\].*$
-        //})
-        //console.log(cleanedlistValues)
-
-        console.log(listTitles)
-        console.log(listValues)
-        thegoldenTable = document.getElementById('infoTable')
-        thegoldenTable.innerHTML=''
-
-        for (i=0; i<listTitles.length; i++){ 
-            if (listValues[i]===''){
-                //pass
-            } else{
-                rowName = `row${i}`
-                row = thegoldenTable.insertRow(-1)
-                cell1 = row.insertCell(0)
-                cell1.setAttribute('id', 'Title')
-                cell2 = row.insertCell(1)
-                cell1.innerHTML = listTitles[i]
-                cell2.innerHTML = listValues[i]
-            }
-        }
-        
-        if (thegoldenTable.rows[0].cells[0].innerHTML === 'Categories'){
-            //pass
-        }else {
-            row = thegoldenTable.insertRow(0)
-            header1 = row.insertCell(0)
-            header2 = row.insertCell(1)
-            header1.innerHTML = "Categories"
-            header2.innerHTML = "Details"
-        }
-
-    }
-}
-
-// todo: need to remove unnecessary symbols from infobox values
