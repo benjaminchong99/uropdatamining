@@ -1,4 +1,6 @@
 /** version 2 */
+elementpresent = false
+
 function createInfobox(inputphrase){
     wordInfobox = inputphrase
     //wordInfobox = document.getElementById('wordSearched')
@@ -28,70 +30,74 @@ function runTable(finallyPageid){
 
 function infoboxContent(data){
     myInfoboxstr = JSON.stringify(data)
+    wordtest = wordInfobox.toLowerCase()
     
-    infoboxElement()
-    //cases; might want to consider using switch once the basic framework has been done
-    if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')||myInfoboxstr.includes('{Automatic Taxobox')){
-        taxoboxStart = myInfoboxstr.indexOf('{Automatic taxobox')
-        if (taxoboxStart==-1){
-            taxoboxStart =myInfoboxstr.indexOf('{Taxobox')
+    if (myInfoboxstr.indexOf(`Infobox ${wordtest}`) != -1){
+        infoboxElement()    
+    }else {
+        //cases; might want to consider using switch once the basic framework has been done
+        if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')||myInfoboxstr.includes('{Automatic Taxobox')){
+            taxoboxStart = myInfoboxstr.indexOf('{Automatic taxobox')
             if (taxoboxStart==-1){
-                taxoboxStart =myInfoboxstr.indexOf('{Automatic Taxobox')
-            }
-        }
-        taxoboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
-        if (taxoboxEnd==-1){
-            taxoboxEnd = myInfoboxstr.indexOf("\\n\\n'''")
-        }
-        buildInfobox(taxoboxStart, taxoboxEnd)
-        console.log('taxobox')
-
-    }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')||myInfoboxstr.includes('{speciesbox')||myInfoboxstr.includes('{subspeciesbox')){
-        speciesboxStart = myInfoboxstr.indexOf('{Speciesbox')
-        if (speciesboxStart==-1){
-            speciesboxStart = myInfoboxstr.indexOf('{Subspeciesbox')
-            if (speciesboxStart==-1){
-                speciesboxStart = myInfoboxstr.indexOf('{speciesbox')
-                if (speciesboxStart ==-1){
-                    speciesboxStart = myInfoboxstr.indexOf('{subspeciesbox')
+                taxoboxStart =myInfoboxstr.indexOf('{Taxobox')
+                if (taxoboxStart==-1){
+                    taxoboxStart =myInfoboxstr.indexOf('{Automatic Taxobox')
                 }
             }
+            taxoboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
+            if (taxoboxEnd==-1){
+                taxoboxEnd = myInfoboxstr.indexOf("\\n\\n'''")
+            }
+            buildInfobox(taxoboxStart, taxoboxEnd)
+            console.log('taxobox')
+    
+        }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')||myInfoboxstr.includes('{speciesbox')||myInfoboxstr.includes('{subspeciesbox')){
+            speciesboxStart = myInfoboxstr.indexOf('{Speciesbox')
+            if (speciesboxStart==-1){
+                speciesboxStart = myInfoboxstr.indexOf('{Subspeciesbox')
+                if (speciesboxStart==-1){
+                    speciesboxStart = myInfoboxstr.indexOf('{speciesbox')
+                    if (speciesboxStart ==-1){
+                        speciesboxStart = myInfoboxstr.indexOf('{subspeciesbox')
+                    }
+                }
+            }
+            speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
+            if (speciesboxEnd == -1){
+                speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n')
+            }
+            buildInfobox(speciesboxStart, speciesboxEnd)
+            console.log('Speciesbox')
+    
+        }else if (myInfoboxstr.includes('{Chembox')){
+            chemboxStart = myInfoboxstr.indexOf('{Chembox')
+            chemboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
+            if (chemboxEnd == -1){
+                chemboxEnd = myInfoboxstr.indexOf("\\n'''")
+            }
+            buildInfobox(chemboxStart, chemboxEnd)
+            console.log('Chemobox')
+    
+        }else if (myInfoboxstr.includes('{Infobox')||myInfoboxstr.includes('{infobox book')){
+            infoboxStart = myInfoboxstr.indexOf('{Infobox')
+            if (infoboxStart == -1){
+                infoboxStart = myInfoboxstr.indexOf('{infobox book')
+            }
+            infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n(\w+\s'''|''')|\\n\{\{Collapsed\sinfobox/g) 
+            /**VERY IMPORTANT REGEX HERE! */
+            buildInfobox(infoboxStart, infoboxEnd)
+            console.log('infobox')
+    
+        } else{
+            infoboxStart = -1
+            infoboxEnd = -1
+            buildInfobox(infoboxStart, infoboxEnd)
         }
-        speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
-        if (speciesboxEnd == -1){
-            speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n')
-        }
-        buildInfobox(speciesboxStart, speciesboxEnd)
-        console.log('Speciesbox')
-
-    }else if (myInfoboxstr.includes('{Chembox')){
-        chemboxStart = myInfoboxstr.indexOf('{Chembox')
-        chemboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
-        if (chemboxEnd == -1){
-            chemboxEnd = myInfoboxstr.indexOf("\\n'''")
-        }
-        buildInfobox(chemboxStart, chemboxEnd)
-        console.log('Chemobox')
-
-    }else if (myInfoboxstr.includes('{Infobox')||myInfoboxstr.includes('{infobox book')){
-        infoboxStart = myInfoboxstr.indexOf('{Infobox')
-        if (infoboxStart == -1){
-            infoboxStart = myInfoboxstr.indexOf('{infobox book')
-        }
-        infoboxEnd = myInfoboxstr.search(/\\n\}\}(\s+|\\n)(\W+''|\W\w+''|\W\w\W+''|<|\\n\w|\{\{Infobox)|\\n(\w+\s'''|''')|\\n\{\{Collapsed\sinfobox/g) 
-        /**VERY IMPORTANT REGEX HERE! */
-        buildInfobox(infoboxStart, infoboxEnd)
-        console.log('infobox')
-
-    } else{
-        infoboxStart = -1
-        infoboxEnd = -1
-        buildInfobox(infoboxStart, infoboxEnd)
+    
+        /**if present, change to true, else print no infobox available */
+        /**SEARCH THIS LAST!!! need to search using Template:__ */
+        /**LEFT WITH INFOBOX ELEMENT */
     }
-
-    /**if present, change to true, else print no infobox available */
-    /**SEARCH THIS LAST!!! need to search using Template:__ */
-    /**LEFT WITH INFOBOX ELEMENT */
 }
 
 

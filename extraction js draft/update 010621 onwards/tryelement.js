@@ -33,10 +33,7 @@ function checkElementExistence(data){
         console.log("no element")
     
     } else {
-        elementboxStart = myInfoboxstr.indexOf('{infobox element')
-        if (elementboxStart == -1){
-            elementboxStart = myInfoboxstr.indexOf('{Infobox element')
-        }
+        elementboxStart = myInfoboxstr.indexOf(/\{[Ii]nfobox element/g)
         elementboxEnd = myInfoboxstr.indexOf('<!--')
         buildInfobox(elementboxStart+16, elementboxEnd-3)
         console.log("infobox element")

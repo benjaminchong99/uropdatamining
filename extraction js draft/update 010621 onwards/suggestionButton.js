@@ -7,10 +7,11 @@ function suggestionButton(){ //Search the suggestion
 };
 
 function runTestandSearch(suggestionSelected){
-    if (suggestionSelected.includes("|")){
+    if (suggestionSelected.indexOf("|") != -1){
         indextoRemove = suggestionSelected.indexOf('|');
         suggestionSelected = suggestionSelected.substring(0,indextoRemove);
     };
+
     encodedSuggestion = encodeURIComponent(suggestionSelected);
     console.log('Querying: ' +suggestionSelected, encodedSuggestion);
     twoSentences(encodedSuggestion);
@@ -66,4 +67,10 @@ function previousButton(){
         document.getElementById('wordSearched').innerHTML = prevSelection
         runTestandSearch(prevSelection)
     }
+}
+
+function refreshSelection(){
+    refreshWord = document.getElementById('wordSearched').innerHTML
+    console.log("Refreshing: ", refreshWord)
+    runTestandSearch(refreshWord)
 }

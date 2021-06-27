@@ -55,14 +55,6 @@ function optionsmaybe(element, index){ // DEF REQ FOR LATER
  * WOULD HAVE ALRDY SET UP UNTIL WEBPAGE SHOWS THE 10 OPTIONS
  ***/
 
-
-
-
-
-
-
-
-
 function clearHistory(){
     wordHistory = [];
     wordHistoryLinked = [];
@@ -73,6 +65,4 @@ function clearHistory(){
     document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
     document.getElementById('wordSearched').innerHTML = ''
 }
-
-
 
