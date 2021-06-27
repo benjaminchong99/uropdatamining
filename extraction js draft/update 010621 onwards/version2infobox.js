@@ -29,11 +29,15 @@ function runTable(finallyPageid){
 function infoboxContent(data){
     myInfoboxstr = JSON.stringify(data)
     
-    //cases
-    if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')){
+    infoboxElement()
+    //cases; might want to consider using switch once the basic framework has been done
+    if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')||myInfoboxstr.includes('{Automatic Taxobox')){
         taxoboxStart = myInfoboxstr.indexOf('{Automatic taxobox')
         if (taxoboxStart==-1){
             taxoboxStart =myInfoboxstr.indexOf('{Taxobox')
+            if (taxoboxStart==-1){
+                taxoboxStart =myInfoboxstr.indexOf('{Automatic Taxobox')
+            }
         }
         taxoboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
         if (taxoboxEnd==-1){
@@ -42,18 +46,30 @@ function infoboxContent(data){
         buildInfobox(taxoboxStart, taxoboxEnd)
         console.log('taxobox')
 
-    }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')){
+    }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')||myInfoboxstr.includes('{speciesbox')||myInfoboxstr.includes('{subspeciesbox')){
         speciesboxStart = myInfoboxstr.indexOf('{Speciesbox')
         if (speciesboxStart==-1){
-            speciesboxStart =myInfoboxstr.indexOf('{Subspeciesbox')
+            speciesboxStart = myInfoboxstr.indexOf('{Subspeciesbox')
+            if (speciesboxStart==-1){
+                speciesboxStart = myInfoboxstr.indexOf('{speciesbox')
+                if (speciesboxStart ==-1){
+                    speciesboxStart = myInfoboxstr.indexOf('{subspeciesbox')
+                }
+            }
         }
         speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
+        if (speciesboxEnd == -1){
+            speciesboxEnd = myInfoboxstr.indexOf('\\n}}\\n')
+        }
         buildInfobox(speciesboxStart, speciesboxEnd)
         console.log('Speciesbox')
 
     }else if (myInfoboxstr.includes('{Chembox')){
         chemboxStart = myInfoboxstr.indexOf('{Chembox')
         chemboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
+        if (chemboxEnd == -1){
+            chemboxEnd = myInfoboxstr.indexOf("\\n'''")
+        }
         buildInfobox(chemboxStart, chemboxEnd)
         console.log('Chemobox')
 
@@ -75,12 +91,11 @@ function infoboxContent(data){
 
     /**if present, change to true, else print no infobox available */
     /**SEARCH THIS LAST!!! need to search using Template:__ */
-    elementboxStart = myInfoboxstr.indexOf('{Infobox element')
-    elementboxEnd = myInfoboxstr.indexOf('<!--')
     /**LEFT WITH INFOBOX ELEMENT */
 }
 
 
+/**Start of constructing Infobox */
 function buildInfobox(infoboxStart, infoboxEnd) {
 
     console.log(infoboxStart, infoboxEnd)
@@ -121,6 +136,7 @@ function buildInfobox(infoboxStart, infoboxEnd) {
         listofCategories = []
 
         /**Step below: loop to find "\n|" one by one until there's none left */
+        /** TAKE NOTE: SOME CASES IS \n |, WHICH ARE NOT YET ACCOUNTED FOR */
         while (myInfobox.search(/\\n\|/g) != -1){
             endCat = myInfobox.indexOf("\\n|")
             one_cat = myInfobox.substring(0,endCat+3)
@@ -155,8 +171,10 @@ function buildInfobox(infoboxStart, infoboxEnd) {
             if (listTitles[i].includes('_') == true) {
                 listTitles[i] = listTitles[i].replace('_', ' ')
             }
+            listTitles[i] = listTitles[i].replace('=', '')
             
             /**cleanning values */
+            listValues[i] = listValues[i].replace(/\{\{dagger\}\}/g,'')
             listValues[i] = listValues[i].replace(/(\{\{\w+\|)/g, '')
             listValues[i] = listValues[i].replace(/([\\\[\]\{\}])/g, '')
             listValues[i] = listValues[i].replace(/<(!|ref).+>/g,'')
