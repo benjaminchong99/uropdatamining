@@ -10,6 +10,7 @@ function infoboxElement(){
 }
 
 function infoboxElementPageid(data) {
+    //get pageid
     findingPageid = JSON.stringify(data)
     console.log(findingPageid)
     pageidStart = findingPageid.indexOf('"pageid":')
@@ -29,13 +30,11 @@ function runElementTable(finallyPageid){
 // try finding page id first, maybe it'll be faster and not result in timeout
 function checkElementExistence(data){
     myInfoboxstr = JSON.stringify(data)
-    if (myInfoboxstr.includes("error")|| myInfoboxstr.indexOf("nfobox element") == -1){ 
-        console.log("no element")
-    
-    } else {
-        elementboxStart = myInfoboxstr.indexOf(/\{[Ii]nfobox element/g)
-        elementboxEnd = myInfoboxstr.indexOf('<!--')
-        buildInfobox(elementboxStart+16, elementboxEnd-3)
-        console.log("infobox element")
-    }
+ 
+    elementboxStart = myInfoboxstr.indexOf(/\{[Ii]nfobox element/g)
+    elementboxEnd = myInfoboxstr.indexOf('<!--')
+    buildInfobox(elementboxStart+16, elementboxEnd-3)
+    console.log("infobox element")
 }
+
+/** INFOBOX ELEMENTS, MORE SPECIFIC ONES */

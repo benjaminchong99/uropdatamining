@@ -1,7 +1,6 @@
 /** version 2 */
-elementpresent = false
-
 function createInfobox(inputphrase){
+    // start by finding the page id
     wordInfobox = inputphrase
     //wordInfobox = document.getElementById('wordSearched')
     console.log(wordInfobox)
@@ -12,6 +11,7 @@ function createInfobox(inputphrase){
 }
 
 function infoboxPageid(data) {
+    // found pageid, then start to find if there is infotable
     findingPageid = JSON.stringify(data)
     console.log(findingPageid)
     pageidStart = findingPageid.indexOf('"pageid":')
@@ -29,14 +29,18 @@ function runTable(finallyPageid){
 }
 
 function infoboxContent(data){
+    // checking of cases first
     myInfoboxstr = JSON.stringify(data)
     wordtest = wordInfobox.toLowerCase()
     
+    // start checking which tyoe of infobox is present
     if (myInfoboxstr.indexOf(`Infobox ${wordtest}`) != -1){
+        // chemical element
         infoboxElement()    
     }else {
         //cases; might want to consider using switch once the basic framework has been done
         if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')||myInfoboxstr.includes('{Automatic Taxobox')){
+            //animal taxonomy -> genus
             taxoboxStart = myInfoboxstr.indexOf('{Automatic taxobox')
             if (taxoboxStart==-1){
                 taxoboxStart =myInfoboxstr.indexOf('{Taxobox')
@@ -52,6 +56,7 @@ function infoboxContent(data){
             console.log('taxobox')
     
         }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')||myInfoboxstr.includes('{speciesbox')||myInfoboxstr.includes('{subspeciesbox')){
+            //animal taxonomy -> species
             speciesboxStart = myInfoboxstr.indexOf('{Speciesbox')
             if (speciesboxStart==-1){
                 speciesboxStart = myInfoboxstr.indexOf('{Subspeciesbox')
@@ -70,6 +75,7 @@ function infoboxContent(data){
             console.log('Speciesbox')
     
         }else if (myInfoboxstr.includes('{Chembox')){
+            // chemistry compounds
             chemboxStart = myInfoboxstr.indexOf('{Chembox')
             chemboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
             if (chemboxEnd == -1){
@@ -79,6 +85,7 @@ function infoboxContent(data){
             console.log('Chemobox')
     
         }else if (myInfoboxstr.includes('{Infobox')||myInfoboxstr.includes('{infobox book')){
+            // infobox -> human related
             infoboxStart = myInfoboxstr.indexOf('{Infobox')
             if (infoboxStart == -1){
                 infoboxStart = myInfoboxstr.indexOf('{infobox book')
@@ -89,6 +96,7 @@ function infoboxContent(data){
             console.log('infobox')
     
         } else{
+            // no infobox present
             infoboxStart = -1
             infoboxEnd = -1
             buildInfobox(infoboxStart, infoboxEnd)
@@ -108,7 +116,7 @@ function buildInfobox(infoboxStart, infoboxEnd) {
     myInfobox = myInfoboxstr.substring(infoboxStart, infoboxEnd+3)
     console.log(myInfobox)
 
-    /**HERE ONNWARDS IS CREATION OF INFOTABLE */
+    /**CREATION OF INFOTABLE */
     if (infoboxStart === -1| infoboxEnd === -1){
             thegoldenTable = document.getElementById('infoTable')
             thegoldenTable.innerHTML=''
@@ -137,12 +145,15 @@ function buildInfobox(infoboxStart, infoboxEnd) {
         /** Maybe make the below a global function, with global variable of myInfobox */
         /**SECTION: STANDARD WAY TO FIND TITLES AND VALUES FOR THE INFOBOX */
         startingPoint = myInfobox.indexOf("\\n|")
+        if (startingPoint > 100){
+            startingPoint =myInfobox.indexOf("\\n |")
+        }
         myInfobox = myInfobox.substring(startingPoint+4,myInfobox.length)
         
         listofCategories = []
 
         /**Step below: loop to find "\n|" one by one until there's none left */
-        /** TAKE NOTE: SOME CASES IS \n |, WHICH ARE NOT YET ACCOUNTED FOR */
+        /** TAKE NOTE: SOME CASES IS \n |, WHICH ARE NOT YET ACCOUNTED FOR; if infobox titles < 10 */
         while (myInfobox.search(/\\n\|/g) != -1){
             endCat = myInfobox.indexOf("\\n|")
             one_cat = myInfobox.substring(0,endCat+3)
@@ -154,7 +165,6 @@ function buildInfobox(infoboxStart, infoboxEnd) {
             listofCategories.push(myInfobox)
         }
         console.log('Categories: ', listofCategories)
-        /** EMERGENCY CHECK: UP TILL HERE IT IS STILL CORRECT */
 
         listTitles = []
         listValues = []
@@ -173,27 +183,78 @@ function buildInfobox(infoboxStart, infoboxEnd) {
 
         /**CLEANING BELOW */
         for (i = 0; i < listTitles.length; i++) {
+            /** create sth to loop until it finds a reasonable title */
+
             /**cleaning title */
             if (listTitles[i].includes('_') == true) {
                 listTitles[i] = listTitles[i].replace('_', ' ')
             }
             listTitles[i] = listTitles[i].replace('=', '')
             
-            /**cleanning values */
+            /**cleanning values */            
             listValues[i] = listValues[i].replace(/\{\{dagger\}\}/g,'')
             listValues[i] = listValues[i].replace(/(\{\{\w+\|)/g, '')
+            listValues[i] = listValues[i].replace(/\]\]/g,';')
             listValues[i] = listValues[i].replace(/([\\\[\]\{\}])/g, '')
             listValues[i] = listValues[i].replace(/<(!|ref).+>/g,'')
             listValues[i] = listValues[i].replace(/'''/g, '')
             listValues[i] = listValues[i].replace(/\*/g, ';')
-            
-        }
+            listValues[i] = listValues[i].replace(/italics[\w\S]+\|/g, '')
+            listValues[i] = listValues[i].replace(/<br>/g, '')
 
+            
+
+            //make list of information into array
+            if (listValues[i].includes('bulleted list')) { //case 1: list is obvious
+                array = [];
+                val = listValues[i].match(/\|(\d+(\D\d|)\D)+[\s\w]+/g)
+                val.forEach(element => {
+                    element = element.replace('|','')
+                    array.push(element)
+                })
+                listValues[i] = array
+            } else if (listValues[i].includes(';')) { //case 2: ';' as seperation
+                array = listValues[i].split(';')
+                for (j=0; j< array.length; j++)
+                    if (array[j].includes("|")) {
+                        counter = (array[j].match(/\|/g) || []).length
+                        if (counter == 1){
+                            array[j] = array[j].replace(/\|[\w\s.()-]*/g, '')
+                    }
+                }
+                listValues[i] = array
+            }
+
+            //to only display the more defining information
+            if (listValues[i].includes("|")) {
+                counter = (listValues[i].match(/\|/g) || []).length
+                if (counter == 1){
+                    listValues[i] = listValues[i].replace(/\|[\w\s]*/g, '')
+                } else {
+                    if (listTitles[i].includes('coordinates')){
+                        //pass
+                    }else {
+                        array = listValues[i].split('|')
+                        listValues[i] =array
+                    }
+                }
+            }
+            //remove unnecessary '' in the array
+            if (typeof listValues[i] == 'object'){
+                for (j = 0; j < listValues[i].length; j++){
+                    if (listValues[i][j] === ''){
+                        listValues[i].splice(j, 1)
+                    }
+                }
+            }
+
+        }
+        
         console.log(listTitles)
         console.log(listValues)
         thegoldenTable = document.getElementById('infoTable')
         thegoldenTable.innerHTML=''
-
+        
         for (i=0; i<listTitles.length; i++){ 
             if (listValues[i]===''|| listValues[i]===' '){
                 //pass
@@ -206,7 +267,15 @@ function buildInfobox(infoboxStart, infoboxEnd) {
                 cell1.setAttribute('id', 'Title')
                 cell2 = row.insertCell(1)
                 cell1.innerHTML = listTitles[i]
-                cell2.innerHTML = listValues[i]
+                
+                if (typeof listValues[i] === 'object'){
+                    console.log('running')
+                    for (j=0; j< listValues[i].length; j++){
+                        cell2.innerHTML += '<br>' + listValues[i][j]
+                    }
+                }else {
+                    cell2.innerHTML = listValues[i]
+                }
             }
         }
         

@@ -1,3 +1,7 @@
+// to modify and control
+let numofSentences = 2;
+let numofSuggestions = 15;
+
 /**GROUP 2: SEARCH THE TERM */
 // SEARCH SELECTED TERM FROM OPTIONS AVAILABLE
 function goldenButton(){
@@ -54,7 +58,7 @@ function displayHistory(OptionTitle, hyperlink) {
 
 /**recurring function */
 function twoSentences(word){
-    const sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=2&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
+    const sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
 
     console.log(sentenceAPI);
     loadJSON(sentenceAPI, getTwoSentences, 'jsonp');    
@@ -141,7 +145,7 @@ function findSuggestions(data){
         cleanedLinks.push(element.replace( /(^.*\[|\].*$)/g, ''));
     });
     slicedLinks = [];
-    slicedLinks = descendingUniqueSort(cleanedLinks).slice(0,15);
+    slicedLinks = descendingUniqueSort(cleanedLinks).slice(0,numofSuggestions);
     console.log(slicedLinks);// take the top 15 linked words
     slicedLinks.forEach(createSuggestions);        
 }

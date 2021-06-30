@@ -1,6 +1,3 @@
-// to modify and control
-let numofSentences = 2;
-let numofSuggestions = 15;
 //console.log(wordHistoryLinked, listSuggestionsLinked) at the end of code for searched values
 //console.log(imageplease) at the end of code for url of current image. Note that variable is in function, hence req to add global var first.
 
