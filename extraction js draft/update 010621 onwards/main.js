@@ -61,5 +61,6 @@ function clearHistory(){
     document.getElementById('searchedWords').innerHTML = wordHistoryLinked 
     document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
     document.getElementById('wordSearched').innerHTML = ''
+    collectionJSON = {}
 }
 

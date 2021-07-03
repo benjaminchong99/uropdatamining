@@ -2,6 +2,15 @@
 let numofSentences = 2;
 let numofSuggestions = 15;
 
+// store information for json format
+let collectionJSON = {};
+let finaltwoSentences = '';
+let imageplease = '';
+let slicedLinks = '';
+let infobox_json = '';
+//let OptionTitle = '';
+//let hyperlink = '';
+
 /**GROUP 2: SEARCH THE TERM */
 // SEARCH SELECTED TERM FROM OPTIONS AVAILABLE
 function goldenButton(){
@@ -10,40 +19,62 @@ function goldenButton(){
     OptionTitle = selectedOption['title'];
     listSuggestions = [];
     console.log(selectedOption); // END OF SELECTING OPTION
-
     pageID = selectedOption['pageid'];
 
     /** SECTION FOR URL related works */
     document.getElementById('wordSearched').innerHTML = selectedOption['title'];
-    
     encodedOption = encodeURIComponent(selectedOption['title']); //encode word into url readable format
+
 
     /**SECTION FOR TWO SENTENCES */
     twoSentences(encodedOption);
 
+
     /**SECTION FOR INFOBOX */
     createInfobox(OptionTitle)
     
+
     /** SECTION FOR HYPERLINK */
     hyperlink = `https://en.wikipedia.org/wiki/${encodedOption}`;
+
 
     /** SECTION FOR SEARCH HISTORY */
     displayHistory(OptionTitle, hyperlink);
 
+
     /** SECTION TO GET IMAGE */
     endpoint = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedOption}&origin=*`;
-
     loadJSON(endpoint, gotImage, 'jsonp'); //load content
+
 
     /** SECTION TO GET SUGGESTIONS*/
     getSuggestions(encodedOption); // get suggestions in the second box
+    
+
+    /** SECTION TO GET JSON */
+    console_logJSON()
+    console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...')
+};
+
+
+/** await async function */
+function resolveJSON(){
+    return new Promise(resolve => { 
+        setTimeout(() => {
+            resolve(getJSONFile());
+        }, 5000);
+        })
+}
+//setTimeout(() => {   console.log('Please wait patiently as the json format is generating...'); }, 4000);
+async function console_logJSON(){
+    console.log('running JSON')
+    await resolveJSON()
 }
 
 
-//Start of all defintiions of functions required in goldenButton() 
+/** Start of all defintiions of functions required in goldenButton() */ 
 
 
-/**recurring function */
 function displayHistory(OptionTitle, hyperlink) {
     if (wordHistory.includes(OptionTitle + ' ')=== true){
         console.log('running omit')
@@ -56,7 +87,6 @@ function displayHistory(OptionTitle, hyperlink) {
 }
 
 
-/**recurring function */
 function twoSentences(word){
     const sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
 
@@ -72,7 +102,6 @@ function getTwoSentences(data) {
 }
 
 
-/**recurring function */
 function gotImage(data){ // func req to get image
     myJSON = JSON.stringify(data);
     console.log(myJSON);
@@ -126,7 +155,6 @@ function backupImage(encodedWordAgain){
 };
 
 
-/**recurring function */
 function getSuggestions(encodedOption){ 
     // req to get suggestions by finding freq appeared words in full content
     urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`;
@@ -182,6 +210,40 @@ function createSuggestions(element, index) {
     document.getElementById(suggestedID).innerHTML = element;
 };
 
+function getJSONFile() {
+    searchedJSON = {
+        "searchTerm": OptionTitle,
+        "page id": pageID,
+        "description": finaltwoSentences,
+        "image url": imageplease,
+        "infobox": infobox_json,
+        "wikipedia page": hyperlink,
+        "suggestions available": slicedLinks
+    };
+    
+    console.log("YOUR SEARCH IN JSON: ",searchedJSON);
+    repeatedTitle = false
+    for (i=0; i<collectionJSON.length; i++) {
+        if (collectionJSON[i] == OptionTitle) {
+            console.log("repeated")
+            repeatedTitle = true;
+        }
+    }
+
+    if (repeatedTitle == true) {
+        // pass
+    } else {
+        collectionJSON[OptionTitle] =searchedJSON
+    }
+    // convert JSON object to string
+    //const JSONdata = JSON.stringify(searchedJSON);
+    //console.log("your search in json: ", JSONdata);
+
+}
+
+function getmultipleJSON() {    
+    console.log(collectionJSON)
+}
 
 /*** END OF GROUP 2: SEARCH THE TERM
  * SHOULD HAVE PROVIDED THE RESULTS, IMAGE, SEARCH HISTORY, HYPERLINK

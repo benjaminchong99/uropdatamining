@@ -10,6 +10,7 @@ function createInfobox(inputphrase){
     loadJSON(urlGetPageid, infoboxPageid, 'jsonp')
 }
 
+
 function infoboxPageid(data) {
     // found pageid, then start to find if there is infotable
     findingPageid = JSON.stringify(data)
@@ -22,25 +23,30 @@ function infoboxPageid(data) {
     runTable(finallyPageid)
 }
 
+
 function runTable(finallyPageid){
     urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
     console.log('running test', urlFindTable)
     loadJSON(urlFindTable, infoboxContent, 'jsonp')
 }
 
+
 function infoboxContent(data){
     // checking of cases first
     myInfoboxstr = JSON.stringify(data)
     wordtest = wordInfobox.toLowerCase()
     
-    // start checking which tyoe of infobox is present
+
+    /** start checking which tyoe of infobox is present */
     if (myInfoboxstr.indexOf(`Infobox ${wordtest}`) != -1){
-        // chemical element
-        infoboxElement()    
+        /** chemical element */
+        infoboxElement()  
+
+        /** chemical element */
     }else {
         //cases; might want to consider using switch once the basic framework has been done
         if (myInfoboxstr.includes('{Automatic taxobox')||myInfoboxstr.includes('{Taxobox')||myInfoboxstr.includes('{Automatic Taxobox')){
-            //animal taxonomy -> genus
+            /** animal taxonomy -> genus */
             taxoboxStart = myInfoboxstr.indexOf('{Automatic taxobox')
             if (taxoboxStart==-1){
                 taxoboxStart =myInfoboxstr.indexOf('{Taxobox')
@@ -55,8 +61,9 @@ function infoboxContent(data){
             buildInfobox(taxoboxStart, taxoboxEnd)
             console.log('taxobox')
     
+            /** animal taxonomy -> genus */
         }else if (myInfoboxstr.includes('{Speciesbox')||myInfoboxstr.includes('{Subspeciesbox')||myInfoboxstr.includes('{speciesbox')||myInfoboxstr.includes('{subspeciesbox')){
-            //animal taxonomy -> species
+            /** animal taxonomy -> species */
             speciesboxStart = myInfoboxstr.indexOf('{Speciesbox')
             if (speciesboxStart==-1){
                 speciesboxStart = myInfoboxstr.indexOf('{Subspeciesbox')
@@ -73,9 +80,10 @@ function infoboxContent(data){
             }
             buildInfobox(speciesboxStart, speciesboxEnd)
             console.log('Speciesbox')
-    
+
+            /** animal taxonomy -> species */
         }else if (myInfoboxstr.includes('{Chembox')){
-            // chemistry compounds
+            /** chemistry compounds */
             chemboxStart = myInfoboxstr.indexOf('{Chembox')
             chemboxEnd = myInfoboxstr.indexOf('\\n}}\\n\\n')
             if (chemboxEnd == -1){
@@ -83,9 +91,10 @@ function infoboxContent(data){
             }
             buildInfobox(chemboxStart, chemboxEnd)
             console.log('Chemobox')
-    
+
+            /** chemistry compounds */
         }else if (myInfoboxstr.includes('{Infobox')||myInfoboxstr.includes('{infobox book')){
-            // infobox -> human related
+            /** infobox -> human related */
             infoboxStart = myInfoboxstr.indexOf('{Infobox')
             if (infoboxStart == -1){
                 infoboxStart = myInfoboxstr.indexOf('{infobox book')
@@ -94,17 +103,16 @@ function infoboxContent(data){
             /**VERY IMPORTANT REGEX HERE! */
             buildInfobox(infoboxStart, infoboxEnd)
             console.log('infobox')
-    
+
+            /** infobox -> human related */
         } else{
-            // no infobox present
+            /** no infobox present */
             infoboxStart = -1
             infoboxEnd = -1
             buildInfobox(infoboxStart, infoboxEnd)
+
+            /** no infobox present */
         }
-    
-        /**if present, change to true, else print no infobox available */
-        /**SEARCH THIS LAST!!! need to search using Template:__ */
-        /**LEFT WITH INFOBOX ELEMENT */
     }
 }
 
@@ -123,6 +131,9 @@ function buildInfobox(infoboxStart, infoboxEnd) {
             nothingRow = thegoldenTable.insertRow(0)
             nothingRow.innerHTML ="No infobox available"
             console.log("If you expected sth, go check the api") // for checking
+
+            // for json 
+            infobox_json = ['no infobox available']
         
     } else{
         /**Double check no more infobox exist */
@@ -142,19 +153,20 @@ function buildInfobox(infoboxStart, infoboxEnd) {
             myInfobox = special_start +"\\n|" + collapsedInfoboxNew_continued + "\\n|" + remainingInfobox
         }
 
-        /** Maybe make the below a global function, with global variable of myInfobox */
         /**SECTION: STANDARD WAY TO FIND TITLES AND VALUES FOR THE INFOBOX */
         startingPoint = myInfobox.indexOf("\\n|")
-        if (startingPoint > 100){
+        startingPoint = startingPoint + 3
+        if (startingPoint > 103){
             startingPoint =myInfobox.indexOf("\\n |")
+            startingPoint = startingPoint +4
         }
-        myInfobox = myInfobox.substring(startingPoint+4,myInfobox.length)
+        myInfobox = myInfobox.substring(startingPoint,myInfobox.length)
         
         listofCategories = []
 
         /**Step below: loop to find "\n|" one by one until there's none left */
         /** TAKE NOTE: SOME CASES IS \n |, WHICH ARE NOT YET ACCOUNTED FOR; if infobox titles < 10 */
-        while (myInfobox.search(/\\n\|/g) != -1){
+        while (myInfobox.search(/\\n\|/g) != -1) {
             endCat = myInfobox.indexOf("\\n|")
             one_cat = myInfobox.substring(0,endCat+3)
             listofCategories.push(one_cat)
@@ -202,16 +214,18 @@ function buildInfobox(infoboxStart, infoboxEnd) {
             listValues[i] = listValues[i].replace(/italics[\w\S]+\|/g, '')
             listValues[i] = listValues[i].replace(/<br>/g, '')
 
-            
-
             //make list of information into array
             if (listValues[i].includes('bulleted list')) { //case 1: list is obvious
                 array = [];
-                val = listValues[i].match(/\|(\d+(\D\d|)\D)+[\s\w]+/g)
-                val.forEach(element => {
-                    element = element.replace('|','')
-                    array.push(element)
-                })
+                val = listValues[i].match(/\|(\d+(\D\d|)\D)+[\s\w()]+/g)
+                if (val == null) {
+                    //pass for now
+                } else {
+                    val.forEach(element => {
+                        element = element.replace('|','')
+                        array.push(element)
+                    })
+                }
                 listValues[i] = array
             } else if (listValues[i].includes(';')) { //case 2: ';' as seperation
                 array = listValues[i].split(';')
@@ -223,7 +237,7 @@ function buildInfobox(infoboxStart, infoboxEnd) {
                     }
                 }
                 listValues[i] = array
-            }
+            } 
 
             //to only display the more defining information
             if (listValues[i].includes("|")) {
@@ -268,8 +282,8 @@ function buildInfobox(infoboxStart, infoboxEnd) {
                 cell2 = row.insertCell(1)
                 cell1.innerHTML = listTitles[i]
                 
-                if (typeof listValues[i] === 'object'){
-                    console.log('running')
+                if (typeof listValues[i] === 'object'){ // for displaying the infotable on the website
+                    console.log('running array')
                     for (j=0; j< listValues[i].length; j++){
                         cell2.innerHTML += '<br>' + listValues[i][j]
                     }
@@ -278,17 +292,18 @@ function buildInfobox(infoboxStart, infoboxEnd) {
                 }
             }
         }
-        
-        if (thegoldenTable.rows[0].cells[0].innerHTML === 'Categories'){
-            //pass
-        }else {
-            row = thegoldenTable.insertRow(0)
-            header1 = row.insertCell(0)
-            header2 = row.insertCell(1)
-            header1.innerHTML = "Categories"
-            header2.innerHTML = "Details"
-        }
+        row = thegoldenTable.insertRow(0)
+        header1 = row.insertCell(0)
+        header2 = row.insertCell(1)
+        header1.innerHTML = "Categories"
+        header2.innerHTML = "Details"
 
+        //store as json
+        infobox_json = []
+        for (i=0; i< listTitles.length; i++) {
+            perCat = `${listTitles[i]} : ${listValues[i]}`
+            infobox_json.push(perCat)
+        }
     }
 }
 
