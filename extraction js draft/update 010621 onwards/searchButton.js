@@ -52,6 +52,7 @@ function goldenButton(){
     
 
     /** SECTION TO GET JSON */
+    console.log(allTitlesnPageid)
     console_logJSON()
     console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...')
 };

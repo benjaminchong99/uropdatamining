@@ -36,7 +36,15 @@ function startSearch(termTosearch) {
 function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS IN DYM
     console.log(data);
     optionsAvailable = data.query.search;
+    allTitlesnPageid = []
+    optionsAvailable.forEach(element =>{
+        allTitlesnPageid.push([element['title'], element['pageid']])
+    })
+    console.log(allTitlesnPageid)
+
     optionsAvailable.forEach(optionsmaybe);
+
+    console.log(optionsAvailable)
 };
 
 
