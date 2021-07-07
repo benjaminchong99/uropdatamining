@@ -11,6 +11,7 @@
     <script src= 'searchButton.js' defer></script>
     <script src= 'suggestionButton.js' defer></script>
     <script src= 'jsononly.js' defer></script>
+    <script src= 'image.js' defer></script>
     <script src= 'version2infobox.js' defer></script>
     <script src= 'tryelement.js' defer></script>
     <script src="p5.js"></script>
@@ -80,7 +81,10 @@
                 <p class="header"><u><b>Searching...</b></u></p>
                 <p id = wordSearched></p>
             </fieldset>
-            <button onclick="jsononly()">just json</button><button onclick="getmultipleJSON()">Console log multiple JSON</button><button onclick = 'clearHistory()'>Clear All Search history and JSON</button>
+            <button onclick="jsononly()">just json</button>
+            <button onclick="imageonly()">just image</button>
+            <button onclick="getmultipleJSON()">Console log multiple JSON</button>
+            <button onclick = 'clearHistory()'>Clear All Search history and JSON</button>
         </div>
         <div class ="column" id="resultscol">
             <fieldset>
