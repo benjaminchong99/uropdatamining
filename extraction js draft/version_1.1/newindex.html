@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="stylesheet" href="style.css">
 
@@ -8,93 +7,91 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title> <!-- what is shown on the tab-->
-    <script src='main.js' defer></script>
-    <script src='searchButton.js' defer></script>
-    <script src='suggestionButton.js' defer></script>
-    <script src="consolelogsummary.js" defer></script>
+    <script src= 'main.js' defer></script>
+    <script src= 'searchButton.js' defer></script>
+    <script src= 'suggestionButton.js' defer></script>
+    <script src= 'version2infobox.js' defer></script>
+    <script src= 'tryelement.js' defer></script>
     <script src="p5.js"></script>
 </head>
-</head>
-
 <body>
-    <h1 class="documentTitle">UROP: Data Mining</h1>
-    <p id=search>
+    <h1 class = "documentTitle">UROP: Data Mining</h1>
+    <p id= search> 
         Search Here: <input id='userinput'>
         <button onclick="setup()">Enter</button>
     </p>
 
-    <div class='row'>
-        <div class="column">
+    <div class = 'row'>
+        <div class ="column">
             <fieldset>
                 <legend><b>Do You Mean</b></legend>
-                <form id=form>
-                    <select id=optionsSelect , size="10">
-                        <option id='option_0'></option>
-                        <option id='option_1'></option>
-                        <option id='option_2'></option>
-                        <option id='option_3'></option>
-                        <option id='option_4'></option>
-                        <option id='option_5'></option>
-                        <option id='option_6'></option>
-                        <option id='option_7'></option>
-                        <option id='option_8'></option>
-                        <option id='option_9'></option>
+                <form id = form>
+                    <select id = optionsSelect , size ="10">
+                        <option id = 'option_0'></option>
+                        <option id = 'option_1'></option>
+                        <option id = 'option_2'></option>
+                        <option id = 'option_3'></option>
+                        <option id = 'option_4'></option>
+                        <option id = 'option_5'></option>
+                        <option id = 'option_6'></option>
+                        <option id = 'option_7'></option>
+                        <option id = 'option_8'></option>
+                        <option id = 'option_9'></option>
                     </select>
                 </form>
-                <button onclick="goldenButton()">Find!</button>
+                <button onclick = "goldenButton()">Find!</button>
             </fieldset>
 
             <fieldset>
                 <legend><b>You might be interested in these too</b></legend>
-                <form id=suggestions>
-                    <select id=selectSuggestion size=5>
-                        <option id=suggestion_0></option>
-                        <option id=suggestion_1></option>
-                        <option id=suggestion_2></option>
-                        <option id=suggestion_3></option>
-                        <option id=suggestion_4></option>
-                        <option id=suggestion_5></option>
-                        <option id=suggestion_6></option>
-                        <option id=suggestion_7></option>
-                        <option id=suggestion_8></option>
-                        <option id=suggestion_9></option>
-                        <option id=suggestion_10></option>
-                        <option id=suggestion_11></option>
-                        <option id=suggestion_12></option>
-                        <option id=suggestion_13></option>
-                        <option id=suggestion_14></option>
+                <form id = suggestions >
+                    <select id = selectSuggestion size = 5>
+                        <option id = suggestion_0></option>
+                        <option id = suggestion_1></option>
+                        <option id = suggestion_2></option>
+                        <option id = suggestion_3></option>
+                        <option id = suggestion_4></option>
+                        <option id = suggestion_5></option>
+                        <option id = suggestion_6></option>
+                        <option id = suggestion_7></option>
+                        <option id = suggestion_8></option>
+                        <option id = suggestion_9></option>
+                        <option id = suggestion_10></option>
+                        <option id = suggestion_11></option>
+                        <option id = suggestion_12></option>
+                        <option id = suggestion_13></option>
+                        <option id = suggestion_14></option>                
                     </select>
                 </form>
-                <button onclick="suggestionButton()">Check it out!</button>
-                <button onclick="previousButton()">
-                    <<<\Previous< /button>
-                        <button onclick="logSummary()">console log summary</button>
+                <button onclick = "suggestionButton()">Check it out!</button>
+                <button onclick = "previousButton()"><<<\Previous</button>
+                <button onclick = "refreshSelection()">Refresh Current Search</button>
             </fieldset>
         </div>
-        <div class="column">
+        <div class ="column">
             <fieldset>
-                <legend class='searchBorder'><b>Search History</b></legend>
-                <em class='header'>Click on hyperlink to find out more!</em>
+                <legend>Search History</legend>
+                <a><i>Click on hyperlink to find out more!</i></a>
                 <h4 class="header"><b>Word/Phrase</b></h4>
-                <p id=searchedWords></p>
+                <p id = searchedWords></p>
                 <h4 class="header"><b>Suggestion</b></h4>
-                <p id=listSuggest></p>
+                <p id = listSuggest></p>
                 <p class="header"><u><b>Searching...</b></u></p>
-                <p id=wordSearched></p>
+                <p id = wordSearched></p>
             </fieldset>
-            <button onclick='clearHistory()'>Clear All Search history</button>
+            <button onclick="getmultipleJSON()">Console log multiple JSON</button><button onclick = 'clearHistory()'>Clear All Search history and JSON</button>
         </div>
-        <div class="column">
+        <div class ="column" id="resultscol">
             <fieldset>
                 <legend>Results</legend>
-                <p id=contentDisplay></p>
-                <div class=image>
-                    <image id=imghtml></image>
+                <p id =contentDisplay></p> 
+                <div class = image >
+                    <image id = imghtml></image>   
                 </div>
             </fieldset>
-            <table></table>
+            <table id="infoTable"></table>
         </div>
     </div>
 </body>
-
 </html>
+

@@ -1,11 +1,9 @@
 .documentTitle {
   color: navy;
-  font-style: oblique;
 }
 
 .row {
   display: flex;
-  justify-content: center;
 }
 
 .column {
@@ -14,6 +12,10 @@
 }
 
 .header {
+  color: orange;
+}
+
+.searchBorder {
   color: orange;
 }
 
@@ -29,6 +31,21 @@
   max-width: 70%;
 }
 
-.searchBorder {
-  color: orange;
+#infoTable {
+  border: 1px solid black;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#Title {
+  text-transform: capitalize;
 }
