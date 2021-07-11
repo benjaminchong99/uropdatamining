@@ -1,6 +1,5 @@
 function jsononly() {
 
-
 console.log(allTitlesnPageid)
 console_logJSON()
 index = document.getElementById('optionsSelect').options.selectedIndex;

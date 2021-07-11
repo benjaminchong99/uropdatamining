@@ -1,5 +1,6 @@
 
 
+
 function imageonly(){
 
     console.log(allTitlesnPageid)
@@ -8,10 +9,10 @@ function imageonly(){
     OptionTitle = selectOptions[0]
     encodedOption = encodeURIComponent(OptionTitle)
     endpoint = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedOption}&origin=*`;
-    loadJSON(endpoint, gotImage, 'jsonp'); //load content
+    loadJSON(endpoint, gottheImage, 'jsonp'); //load content
 }
 
-function gotImage(data){ // func req to get image
+function gottheImage(data){ // func req to get image
     myJSON = JSON.stringify(data);
     console.log(myJSON);
     imageplease = '';
@@ -29,39 +30,31 @@ function gotImage(data){ // func req to get image
 
     if (imageplease === ''){
         console.log("Find backup image");
-        checkTitleStart = myJSON.indexOf('"title":');
-        filterTitle = myJSON.substring(checkTitleStart+9, myJSON.length);
-        checkTitleEnd = filterTitle.indexOf('"');
-        checkTitle = filterTitle.substring(0,checkTitleEnd);
-        console.log(checkTitle);
+        sampleimageurl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedOption}&format=json`;
+        console.log(sampleimageurl)
         
-        encodedWordAgain = encodeURIComponent(checkTitle);
-        backupImage(encodedWordAgain);
+        loadJSON(sampleimageurl, backuptheImage, 'jsonp');
     };
 };
     
     
-function backupImage(encodedWordAgain){
-    console.log('Finding backup image')
-    sampleimageurl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedWordAgain}&format=json`;
-    console.log(sampleimageurl)
+function backuptheImage(data){
 
-    loadJSON(sampleimageurl, getimg, 'jsonp');
+    myDump = JSON.stringify(data);
 
-    function getimg(data){
-        myDump = JSON.stringify(data);
+    lolsStart = myDump.indexOf('//upload');
+    lolsEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\("\)|" decoding)/i);
+    url = myDump.substring(lolsStart+2,lolsEnd+4);
+    console.log(lolsStart, lolsEnd);
+    console.log(url);
+    imageplease = `https://${url}`;
+    console.log("url: ", imageplease);
+    img = document.createElement('img'); 
+    img.src = imageplease; 
+    document.getElementById('imghtml').src = imageplease;
 
-        lolsStart = myDump.indexOf('//upload');
-        lolsEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\("\)|" decoding)/i);
-        url = myDump.substring(lolsStart+2,lolsEnd+4);
-        console.log(lolsStart, lolsEnd);
-        console.log(url);
-        imageplease = `https://${url}`;
-        console.log("url: ", imageplease);
-        img = document.createElement('img'); 
-        img.src = imageplease; 
-        document.getElementById('imghtml').src = imageplease;
-    
-    };
 };
+
+
+// if image cannpt wprk, return 0?
 
