@@ -44,6 +44,7 @@ function gotImage(data){ // func req to get image
 function backupImage(encodedWordAgain){
     console.log('Finding backup image')
     sampleimageurl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedWordAgain}&format=json`;
+    console.log(sampleimageurl)
 
     loadJSON(sampleimageurl, getimg, 'jsonp');
 
