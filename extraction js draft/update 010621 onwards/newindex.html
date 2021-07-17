@@ -14,6 +14,7 @@
     <script src= 'image.js' defer></script>
     <script src= 'version2infobox.js' defer></script>
     <script src= 'tryelement.js' defer></script>
+    <script src= 'outline.js' defer></script>
     <script src="p5.js"></script>
 </head>
 <body>
@@ -83,8 +84,10 @@
             </fieldset>
             <button onclick="jsononly()">just json</button>
             <button onclick="imageonly()">just image</button>
+            <button onclick="outlineonly()">just outline</button>
             <button onclick="getmultipleJSON()">Console log multiple JSON</button>
             <button onclick = 'clearHistory()'>Clear All Search history and JSON</button>
+            <table id = "outline"></table>
         </div>
         <div class ="column" id="resultscol">
             <fieldset>
