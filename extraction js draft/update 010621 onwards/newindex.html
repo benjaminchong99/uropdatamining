@@ -70,6 +70,24 @@
                 <button onclick = "previousButton()"><<<\Previous</button>
                 <button onclick = "refreshSelection()">Refresh Current Search</button>
             </fieldset>
+            <fieldset>
+                <legend><b>Possible Outlines</b></legend>
+                <form id = outline_suggestion >
+                    <select id = selectOutline size = 5>
+                        <option id = outline_0></option>
+                        <option id = outline_1></option>
+                        <option id = outline_2></option>
+                        <option id = outline_3></option>
+                        <option id = outline_4></option>      
+                        <option id = outline_5></option>      
+                        <option id = outline_6></option>      
+                        <option id = outline_7></option>      
+                        <option id = outline_8></option>      
+                        <option id = outline_9></option>      
+                    </select>
+                </form>
+                <button onclick = "outlineonly()">Show Outline</button>
+            </fieldset>
         </div>
         <div class ="column">
             <fieldset>
@@ -87,7 +105,6 @@
             <button onclick="outlineonly()">just outline</button>
             <button onclick="getmultipleJSON()">Console log multiple JSON</button>
             <button onclick = 'clearHistory()'>Clear All Search history and JSON</button>
-            <table id = "outline"></table>
         </div>
         <div class ="column" id="resultscol">
             <fieldset>
@@ -99,7 +116,9 @@
             </fieldset>
             <table id="infoTable"></table>
         </div>
-    </div>
+    </div>            
+    <table id = "outline"></table>
+
 </body>
 </html>
 

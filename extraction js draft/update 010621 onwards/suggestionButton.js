@@ -37,6 +37,8 @@ function runTestandSearch(suggestionSelected){
     /** create suggestions */
     getSuggestions(encodedSuggestion);
 
+    /**search for possible outline */    
+    possibleOutline(suggestionSelected)
     
     /** create JSON */
     OptionTitle = suggestionSelected;

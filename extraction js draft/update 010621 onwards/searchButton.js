@@ -51,6 +51,9 @@ function goldenButton(){
     getSuggestions(encodedOption); // get suggestions in the second box
     
 
+    /** SECTION FOR POSSIBLE OUTLINE */
+    possibleOutline(OptionTitle)
+
     /** SECTION TO GET JSON */
     console.log(allTitlesnPageid)
     console_logJSON()
