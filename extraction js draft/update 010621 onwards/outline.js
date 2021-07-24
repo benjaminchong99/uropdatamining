@@ -33,9 +33,10 @@ function showOutlineOptions(data){
 function outlineonly() {
 // possible outline by searching outline of __ with normal search but show in another form table
     //keyword = OptionTitle    
-    indexkeyword = document.getElementById('selectOutline').options.selectedIndex
-    selectedOutline = finaloutline[indexkeyword]
-    console.log(selectedOutline)
+    //indexkeyword = document.getElementById('selectOutline').options.selectedIndex
+    selectedOutline = "Outline of science"
+    //selectedOutline = finaloutline[indexkeyword]
+    //console.log(selectedOutline)
     apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
     console.log(apirequired)
     loadJSON(apirequired,showoutine,'jsonp')
@@ -49,6 +50,7 @@ function showoutine(data) {
     console.log(newdata)
 
 
+    fortesting = [] // for test
     headers_index = []
     temp_contentunderheader = []
     contentunderheader = []
@@ -68,6 +70,7 @@ function showoutine(data) {
 
     temp_contentunderheader.forEach(element => {
         splittedcontent = element.split(/\\n\*|\\n/g)
+        console.log(splittedcontent)
         truesplittedcontent = []
         splittedcontent[1] = splittedcontent[1].replace(/=/g, "")
         for (j=0; j<splittedcontent.length; j++) {
@@ -79,15 +82,25 @@ function showoutine(data) {
             }
         }
         contentunderheader.push(truesplittedcontent)    
+        fortesting.push(truesplittedcontent) //for test
     })
 
-    console.log('spliced: ', contentunderheader)
+    console.log('spliced: ', contentunderheader) // first filter to make sure no empty list
 
     outlinetable = document.getElementById('outline');
     outlinetable.innerHTML =''
     
+    splicedJSON = {}
+    listofheaders = [] // for test
     contentunderheader.forEach(element => {
-        header = element.splice(0,1)
+        console.log(element)
+        header = element[0]
+        listofheaders.push(header) // for test
+        contentAfterHeader=  element.splice(0,1)
+
+        splicedJSON[header] = contentAfterHeader // for json
+        console.log(splicedJSON[header])
+        
         outlinecontent = ''
         for (i=0; i<element.length; i++){
             if (element[i] === ''){
@@ -103,7 +116,66 @@ function showoutine(data) {
         cell2 = row.insertCell(1)
         cell1.innerHTML = header
         cell2.innerHTML = content
-    })
+    }) // bring this backward after finiishing 
+
+
+    // testing starts here
+    testJSON = {}
+    console.log(fortesting)
+    console.log(listofheaders)
+    
+    for (i=0; i<fortesting.length; i++) {
+        element = fortesting[i] // up till here still looks correct
+        
+        content = {}
+        subcontent = {}
+        subsubcontent = {}
+        subx3content = {}
+        for (j=0; j<element.length; j++){
+            console.log(element[j])
+            checksubcontent1 = element[j].search(/#\s/g) //check for special characters
+            checksubcontent2 = element[j].search(/\*\s/g) //check for special characters
+            checksubsubcontent = element[j].search(/#\*\s/g) //check for special characters
+            checksubx3content = element[j].search(/#\*\*\s/g) //check for special characters
+            
+            if (checksubcontent1 == -1 || checksubcontent2 == -1) {
+                content[element[j]] = {}
+                testJSON[listofheaders[i]] = content
+                
+            } else if (checksubcontent1 == 0 || checksubcontent2 == 0) {
+                currentcontent = Object.keys(content)[Object.keys(content).length -1]
+                subcontent[element[j]] = {}
+                testJSON[listofheaders[i]][currentcontent] = subcontent
+                
+            } else if (checksubsubcontent == 0) { //check #* ,currently not working
+                subsubcontent[element[j]] = {}
+                currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
+                console.log(currentsubcontent)
+                testJSON[listofheaders[i]][currentcontent][currentsubcontent] = subsubcontent
+
+            } else if (checksubx3content == 0) {
+                subx3content[element[j]] = {}
+                currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
+                testJSON[listofheaders[i]][currentcontent][currentsubcontent][currentsubsubcontent] = subx3content
+            }
+
+
+//            testcontentAfterHeader = []
+//            //console.log(element[j])
+//            if (element[j].indexOf("#") != 0) {
+//                testcontentAfterHeader.push(element[j])
+//                //console.log(testcontentAfterHeader)
+//                testJSON[listofheaders[i]] = testcontentAfterHeader
+//            } else if (element[j].indexOf(/#\s/g) === 0) {
+//                
+//            }
+        }
+    }
+    console.log(testJSON)
+
+    //continue on with json here first, then bring it before printing later 
+    // check the first few letters, then straightaway add into json
+
 }
 
     
