@@ -138,25 +138,28 @@ function showoutine(data) {
             checksubsubcontent = element[j].search(/#\*\s/g) //check for special characters
             checksubx3content = element[j].search(/#\*\*\s/g) //check for special characters
             
-            if (checksubcontent1 == -1 || checksubcontent2 == -1) {
-                content[element[j]] = {}
-                testJSON[listofheaders[i]] = content
-                
-            } else if (checksubcontent1 == 0 || checksubcontent2 == 0) {
-                currentcontent = Object.keys(content)[Object.keys(content).length -1]
-                subcontent[element[j]] = {}
-                testJSON[listofheaders[i]][currentcontent] = subcontent
-                
-            } else if (checksubsubcontent == 0) { //check #* ,currently not working
+            if (checksubsubcontent == 0) { //check #*
                 subsubcontent[element[j]] = {}
+                currentcontent = Object.keys(content)[Object.keys(content).length -1]
                 currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
                 console.log(currentsubcontent)
                 testJSON[listofheaders[i]][currentcontent][currentsubcontent] = subsubcontent
 
-            } else if (checksubx3content == 0) {
+            } else if (checksubx3content == 0) { //check #**
                 subx3content[element[j]] = {}
                 currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
                 testJSON[listofheaders[i]][currentcontent][currentsubcontent][currentsubsubcontent] = subx3content
+            
+            } else if (checksubcontent1 == 0 || checksubcontent2 == 0) { //check #
+                currentcontent = Object.keys(content)[Object.keys(content).length -1]
+                subcontent[element[j]] = {}
+                testJSON[listofheaders[i]][currentcontent] = subcontent
+
+            } else if (checksubcontent1 == -1 || checksubcontent2 == -1) {
+                content[element[j]] = {}
+                testJSON[listofheaders[i]] = content
+                
+                
             }
 
 
