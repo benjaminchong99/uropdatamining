@@ -106,7 +106,7 @@ function getTwoSentences(data) {
 }
 
 
-function gotImage(data){ // func req to get image
+function gotImage(data){ // function required to get image
     myJSON = JSON.stringify(data);
     console.log(myJSON);
     imageplease = '';

@@ -1,5 +1,5 @@
-function jsononly() {
-
+//component of the overall functions
+function jsononly() { //obtain only the search result in json
 console.log(allTitlesnPageid)
 console_logJSON()
 index = document.getElementById('optionsSelect').options.selectedIndex;

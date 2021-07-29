@@ -1,5 +1,8 @@
 function possibleOutline(OptionTitle) {
     keyword = OptionTitle
+    if (keyword.indexOf("Outline of")==0) {
+        keyword = keyword.replace("Outline of", "")
+    }
     keyword = keyword.toLowerCase()
     outlinepossibilities = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
     loadJSON(outlinepossibilities, showOutlineOptions, 'jsonp')
@@ -16,7 +19,7 @@ function showOutlineOptions(data){
             finaloutline.push(outlinetitle)
         }
     })
-    console.log(finaloutline)
+    console.log(finaloutline) // list of Outline of __
 
     for (k=0; k<10; k++) {
     documentid = `outline_${k}`
@@ -30,12 +33,11 @@ function showOutlineOptions(data){
 
 }
 
-function outlineonly() {
-// possible outline by searching outline of __ with normal search but show in another form table
-    //keyword = OptionTitle    
-    //indexkeyword = document.getElementById('selectOutline').options.selectedIndex
-    selectedOutline = "Outline of science"
-    //selectedOutline = finaloutline[indexkeyword]
+function outlineonly() { //start of constructing outline
+    
+    indexkeyword = document.getElementById('selectOutline').options.selectedIndex
+    selectedOutline = finaloutline[indexkeyword]
+    //selectedOutline = "Outline of science"
     //console.log(selectedOutline)
     apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
     console.log(apirequired)
@@ -47,10 +49,9 @@ function outlineonly() {
 function showoutine(data) {
     showdata = JSON.stringify(data)
     newdata = showdata.substring(showdata.indexOf('\\n=='), showdata.length)
-    console.log(newdata)
+    console.log(newdata) //raw json
 
 
-    fortesting = [] // for test
     headers_index = []
     temp_contentunderheader = []
     contentunderheader = []
@@ -82,14 +83,105 @@ function showoutine(data) {
             }
         }
         contentunderheader.push(truesplittedcontent)    
-        fortesting.push(truesplittedcontent) //for test
     })
 
     console.log('spliced: ', contentunderheader) // first filter to make sure no empty list
 
+    listofheaders = [] // for test
+    contentunderheader.forEach(element => {
+        console.log(element)
+        header = element[0]
+        listofheaders.push(header) // for test
+
+    })
+
+    testJSON = {}
+    console.log(listofheaders)
+    
+    for (i=0; i<contentunderheader.length; i++) {
+        element = contentunderheader[i] // up till here still looks correct
+        
+        headers = []
+        content = []
+        subcontent = []
+        subsubcontent = []
+        subx3content = []
+
+        for (j=0; j<element.length; j++){
+            console.log(element[j])
+            checksubcontent1 = element[j].search(/#\s/g) //check for special characters
+            checksubcontent2 = element[j].search(/\*\s/g) //check for special characters
+            checksubsubcontent = element[j].search(/#\*\s/g) //check for special characters
+            checksubx3content = element[j].search(/#\*\*\s/g) //check for special characters
+  
+            currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
+            currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
+
+
+
+            if (checksubsubcontent == 0) { //check #*
+                subx3content = [] //reset subx3content
+                addsubsubcontentjson = {}
+                addsubsubcontentjson[element[j]] = {}
+                subsubcontent.push(addsubsubcontentjson)
+                
+                //model
+                subcontentJSON = testJSON[listofheaders[i]][currentcontent][currenttempobj]
+                currentsubcontent = Object.keys(subcontentJSON)[Object.keys(subcontentJSON).length -1]
+                tempsubobj = testJSON[listofheaders[i]][currentcontent][currenttempobj][subcontent.length-1]
+                currenttempsubobj = Object.keys(tempsubobj)[Object.keys(tempsubobj).length -1]
+                testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj] = subsubcontent
+                
+
+            } else if (checksubx3content == 0) { //check #**
+                addsubx3contentjson = {}
+                addsubx3contentjson[element[j]] = {}
+                subx3content.push(addsubx3contentjson)
+
+                subsubcontentJSON = testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj]
+                currentsubsubcontent = Object.keys(subsubcontentJSON)[Object.keys(subsubcontentJSON).length -1]
+                tempsubsubobj = testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj][subsubcontent.length-1]
+                currenttempsubsubobj = Object.keys(tempsubsubobj)[Object.keys(tempsubsubobj).length -1]
+                testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj][currentsubsubcontent][currenttempsubsubobj] = subx3content
+                            
+            } else if (checksubcontent1 == 0||checksubcontent2 == 0) { //check #
+                subsubcontent = [] //reset subsubcontent
+                addsubcontentjson = {}
+                addsubcontentjson[element[j]] = {}
+                subcontent.push(addsubcontentjson)
+
+                //model
+                contentJSON = testJSON[listofheaders[i]] //list
+                currentcontent = Object.keys(contentJSON)[Object.keys(contentJSON).length-1] //gives you the last index of the content under the header; JSON
+                tempobj = testJSON[listofheaders[i]][content.length-1] // content, last index; layer below the header
+                currenttempobj = Object.keys(tempobj)[Object.keys(tempobj).length-1] // gives you the key 
+                testJSON[listofheaders[i]][currentcontent][currenttempobj] = subcontent //json[key, header][last index of the value(array) under key,header][key of the value] = value of the value
+
+            } else if (checksubcontent1 == -1 || checksubcontent2 == -1) {
+                subcontent = [] //reset subcontent
+                addheader = {}
+                addheader[listofheaders[i]] = {}
+                headers.push(addheader)
+                //console.log(headers)
+                
+                addcontentjson = {}
+                addcontentjson[element[j]] = {}
+                content.push(addcontentjson)
+
+                
+                currentheader = Object.keys(testJSON)[Object.keys(testJSON).length - 1]
+                tempheader = testJSON
+                testJSON[listofheaders[i]] = content
+                
+                
+            }
+
+        }
+    }
+
     outlinetable = document.getElementById('outline');
     outlinetable.innerHTML =''
-    
+    // need some other stuff to format?
     splicedJSON = {}
     listofheaders = [] // for test
     contentunderheader.forEach(element => {
@@ -116,85 +208,9 @@ function showoutine(data) {
         cell2 = row.insertCell(1)
         cell1.innerHTML = header
         cell2.innerHTML = content
-    }) // bring this backward after finiishing 
+    }) 
 
-
-    // testing starts here
-    testJSON = {}
-    console.log(fortesting)
-    console.log(listofheaders)
-    
-    for (i=0; i<fortesting.length; i++) {
-        element = fortesting[i] // up till here still looks correct
-        
-        content = {}
-        subcontent = {}
-        subsubcontent = {}
-        subx3content = {}
-        for (j=0; j<element.length; j++){
-            console.log(element[j])
-            checksubcontent1 = element[j].search(/#\s/g) //check for special characters
-            checksubcontent2 = element[j].search(/\*\s/g) //check for special characters
-            checksubsubcontent = element[j].search(/#\*\s/g) //check for special characters
-            checksubx3content = element[j].search(/#\*\*\s/g) //check for special characters
-            
-            if (checksubsubcontent == 0) { //check #*
-                subsubcontent[element[j]] = {}
-                currentcontent = Object.keys(content)[Object.keys(content).length -1]
-                currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
-                console.log(currentsubcontent)
-                testJSON[listofheaders[i]][currentcontent][currentsubcontent] = subsubcontent
-
-            } else if (checksubx3content == 0) { //check #**
-                subx3content[element[j]] = {}
-                currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
-                testJSON[listofheaders[i]][currentcontent][currentsubcontent][currentsubsubcontent] = subx3content
-            
-            } else if (checksubcontent1 == 0 || checksubcontent2 == 0) { //check #
-                currentcontent = Object.keys(content)[Object.keys(content).length -1]
-                subcontent[element[j]] = {}
-                testJSON[listofheaders[i]][currentcontent] = subcontent
-
-            } else if (checksubcontent1 == -1 || checksubcontent2 == -1) {
-                content[element[j]] = {}
-                testJSON[listofheaders[i]] = content
-                
-                
-            }
-
-
-//            testcontentAfterHeader = []
-//            //console.log(element[j])
-//            if (element[j].indexOf("#") != 0) {
-//                testcontentAfterHeader.push(element[j])
-//                //console.log(testcontentAfterHeader)
-//                testJSON[listofheaders[i]] = testcontentAfterHeader
-//            } else if (element[j].indexOf(/#\s/g) === 0) {
-//                
-//            }
-        }
-    }
+    // check
     console.log(testJSON)
 
-    //continue on with json here first, then bring it before printing later 
-    // check the first few letters, then straightaway add into json
-
 }
-
-    
-
-//function organizecontent(element) {
-//    splittedcontent = element.split(/\\n\*|\\n/g)
-//    splittedcontent[0] = splittedcontent[0].replace(/=/g, "")
-//    for (j=0; j<splittedcontent.length; j++) {
-//        splittedcontent[j] = splittedcontent[j].replace(/[\[\]]/g, "")
-//    }
-//    contentunderheader.push(splittedcontent)
-//}
-// check for \n== ==\n ; between \n* ; \n* to \n
-// == header of content
-// === sections within the content
-// ==== further classification in topic
-// ===== final classification
-// [[]]\n* is the content to show
-

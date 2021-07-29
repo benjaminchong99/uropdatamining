@@ -306,6 +306,3 @@ function buildInfobox(infoboxStart, infoboxEnd) {
         }
     }
 }
-
-// todo: taxobox
-// fucntion to choose between Template, infobox, chembox, taxobox

@@ -1,6 +1,5 @@
-
-
-
+//component of the overall functions
+//just obtaining image
 function imageonly(){
 
     console.log(allTitlesnPageid)
@@ -12,7 +11,7 @@ function imageonly(){
     loadJSON(endpoint, gottheImage, 'jsonp'); //load content
 }
 
-function gottheImage(data){ // func req to get image
+function gottheImage(data){ // function req to get image
     myJSON = JSON.stringify(data);
     console.log(myJSON);
     imageplease = '';

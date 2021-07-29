@@ -33,7 +33,7 @@ function startSearch(termTosearch) {
 
 
 // start of defining functions used in setup()
-function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS IN DYM
+function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS
     console.log(data);
     optionsAvailable = data.query.search;
     allTitlesnPageid = []
@@ -48,7 +48,7 @@ function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS IN DYM
 };
 
 
-function optionsmaybe(element, index){ // DEF REQ FOR LATER
+function optionsmaybe(element, index){ //show the options on the page
     title = optionsAvailable[index]['title'];
     optionName = `option_${index}`;
 
@@ -60,7 +60,7 @@ function optionsmaybe(element, index){ // DEF REQ FOR LATER
  * WOULD HAVE ALRDY SET UP UNTIL WEBPAGE SHOWS THE 10 OPTIONS
  ***/
 
-function clearHistory(){
+function clearHistory(){ //clear all history
     wordHistory = [];
     wordHistoryLinked = [];
     listSuggestions = [];
