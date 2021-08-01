@@ -1,50 +1,42 @@
-#UROP: DATA MINING
+# UROP: DATA MINING
 
 Description:
-TBC
+
+This project aims to develop an efficient algorithm to extract open access information from Wikipedia present the information in a concised manner.
+
 Getting Started:
 
 Wikipedia API
+
 Below are the parts of Wikipedia API involved. For a more extensive guide, please refer to Wikipedia's documentation here: https://www.mediawiki.org/wiki/API:Main_page
-
-//
-
-Used for normal searches in Wikipedia:" https://en.wikipedia.org/wiki/[insert_word_here]" . The url will lead you to thet page on wikipedia that shows the information of the search.
-
-The Wikipedia API used for searching in English by adding more terms behind the url "https://en.wikipedia.org/w/api.php". The results obtained from the API are always in the form of JSON.
-
-The word or phrase entered to search needs to be encoded in order for the API to work. Special characters needs to be shown in the ascii form (" " = %20 or just replace with '\_' ; "( , )" = "%28, %29"). This is done with the function: encodeURIComponent().
-
-API that will give 10 suggestions on what you search may be refering to. It is similar to searching google and having 10 results given back: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodedTermtoSearch}&format=json"
-Some of the basic details shown are the title, pageid and snippet
-
-You can then choose the option you want by accessing data
-You will first need to load the JSON file using the code:
-loadJSON(urlforContent, gotContent, 'jsonp');
-urlforContent is the url above
-gotCotent is a function to be defined
-'jsonp' is to indicate the type of file to read
-
-You will need to then use:
-data.query.search --> this will allow you to go into the arraw until the part where the options are listed (can use chart to show?)
-key in the index and whatever you need. e.g. [index][title]
-
-API to search for sources of images provided by Wikipedia: https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&titles=${encodedOption}&origin=*
-How to access it?
-use JSON.stringify to convert data into text, make this into variable (aka variable = JSON.stringify(data))
-use variable.search("https" or ".jpg") to find the start and end index, rmb to add characters for the end index
-use variable.substring(startindex, endindex)
-//
-
-Wikipedia API
 
 sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
 
-Variable "word" is the keyword to be searched. Adjust the number of sentences using the variable "numofSentences".
+Variable "word" is the keyword to be searched. Adjust the number of sentences using the variable "numofSentences". API to find the first few sentences of the keyword searched.
 
 urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
 
-Variable "encodedOption" is the option selected by the user, encoded in ascii format.
+Variable "encodedOption" is the option selected by the user, encoded in ascii format. API to find content of the keyword searched.
+
+urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
+
+Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find the page ID of the Wikipedia page of the keyword searched.
+
+urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
+
+Variable "finallyPageid" is the pageid of the keyword to be searched. API to find content of the keyword searched. Note the difference from urlSuggestions, where the result of this API will return infobox information in the content.
+
+urlGetPageidElement = `https://en.wikipedia.org/w/api.php?action=query&titles=Template:Infobox_${encodedwordInfobox}&format=json`
+
+Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find content of the keyword that is related to chemical element.
+
+outlinepossibilities = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
+
+Variable keyword is the keyword to be searched. API to find suggested searches of the "Outline of [keyword]"
+
+apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
+
+Variable selectedOutline is the keyword to be searched, encoded in ascii format. API to find content of the Outline of keyword.
 
 ##**Code**
 
@@ -103,23 +95,55 @@ functions:
     * possibleOutline(OptionTitle): Search for possible Outlines of the keyword. Refer to outline.js.
 
 ###version2infobox.js
-This file contains the functions to look for possible infobox present in the Wikipedia page.
+This file contains the functions to look for possible infobox present in the Wikipedia page. Infoboxes are short concised information stored in the form of a table and usually displayed on the right column on the Wikipedia page.
+
+functions:
+
+    * createInfobox(inputphrase): start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageid.
+
+    * infoboxPageid(data): obtain the pageid of the Wikipedia page and run the search for the infobox.
+
+    * runTable(finallyPageid): start to obtain the JSON file and search for the presennce of infobox using the variable urlFindTable.
+
+    * infoboxContent(data): find the category of infobox:
+        * infobox: (general) Usually more human related keywords(Famous person, Albums, Country, etc.)
+        * chembox: Chemistry related keywords (more of mixtures, compounds)
+        * element: Chemical elements
+        * taxobox/ Automatic taxobox: Animals
+        * speciesbox: Classification of animals
+
+    * buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page. Involves many filtering of words thorugh using regex expressions.
 
 ###tryelement.js
-This file contains the functions to look for infobox present in the Wikipedia page for chemistry related keywords.
+This file contains the functions to look for infobox present in the Wikipedia page for keywords that are related to chemical element.
+
+functions:
+
+    * infoboxElement(): start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageidElement. In front of the keyword there is an added "Template:Infobox" phrase for more specificity.
+
+    * infoboxElementPageid(data): obtain the pageid of the Wikipedia page and run the search for the infobox.
+
+    * runElementTable(finallyPageid): start to obtain the JSON file and search for the presennce of infobox using the variable urlFindTable.
+
+    * checkElementExistence(data): confirms whether there is the existence of the infobox of the keyword searched. Then proceeds to run the function buildInfobox(infoboxStart, infoboxEnd).
 
 ###outline.js
 The file mainly contains the functions to display and store Wikipedia search, in the format of "Outline of:[title]", in JSON.
 
-The format of Wikipedia search on Outlines are as such:
-The headers for the different sections of the content are indicated with "==" in front and behind of the title. For example, "==Essence of Science=="
-Following the headers, the contents can be classified into different categories:
-"\s\w" or "\w"
-"#"
-"#_"
-"#\*\*"
-"_"
+functions:
 
-To represent the information
+    * possibleOutline(OptionTitle): search "Outline of keyword" using outlinepossibilities to find possible searches in Wikipedia.
+    * showOutlineOptions(data): print out the results of the possible searches of "Outline of keyword" on the html page.
+    * outlineonly(): start the search for the outline that the user chose using apirequired.
+    * showoutine(data): take the JSON file, read and repackage the information into a simpler JSON file. The outline will also be displayed on the html page.
 
-newindex.html
+        ** The format of Wikipedia search on Outlines are as such:
+            *** The headers for the different sections of the content are indicated with "==" in front and behind of the title. For example, "==Essence of Science=="
+        ** Following the headers, the contents can be classified into different categories:
+            *** "\s\w" or "\w"
+            *** "#"
+            *** "#_"
+            *** "#\*\*"
+            *** "_"
+
+        ** The outline is done by first getting the headers and their index. Then using regex expressions, we filter and seperate individual pointers. Based on the different categories, we then seperate and insert the details into the relevant position in the JSON file.
