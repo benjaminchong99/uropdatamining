@@ -1,7 +1,6 @@
-//console.log(wordHistoryLinked, listSuggestionsLinked) at the end of code for searched values
-//console.log(imageplease) at the end of code for url of current image. Note that variable is in function, hence req to add global var first.
-
-//for later function purposes, do not nmodify
+/**state variables
+for later function purposes, do not modify
+*/
 let optionsAvailable = null;
 let wordHistory = [];
 let wordHistoryLinked = [];
@@ -13,7 +12,7 @@ let pageID = null;
 
 /**GROUP 1: SEARCH BAR */
 function setup() {
-
+    
     // START WITH USER INPUT    
     userInput = document.getElementById('userinput');
     //userInput = select("#userinput");
@@ -41,9 +40,9 @@ function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS
         allTitlesnPageid.push([element['title'], element['pageid']])
     })
     console.log(allTitlesnPageid)
-
+    
     optionsAvailable.forEach(optionsmaybe);
-
+    
     console.log(optionsAvailable)
 };
 
@@ -51,7 +50,7 @@ function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS
 function optionsmaybe(element, index){ //show the options on the page
     title = optionsAvailable[index]['title'];
     optionName = `option_${index}`;
-
+    
     document.getElementById(optionName).innerHTML = index +":" + title + '<br>';    
 };
 
@@ -72,3 +71,5 @@ function clearHistory(){ //clear all history
     collectionJSON = {}
 }
 
+//console.log(wordHistoryLinked, listSuggestionsLinked) at the end of code for searched values
+//console.log(imageplease) at the end of code for url of current image. Note that variable is in function, hence req to add global var first.

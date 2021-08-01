@@ -1,6 +1,6 @@
-function possibleOutline(OptionTitle) {
+function possibleOutline(OptionTitle) { //take current option and find possible Outline topics
     keyword = OptionTitle
-    if (keyword.indexOf("Outline of")==0) {
+    if (keyword.indexOf("Outline of")==0) { // if original search is on outline then ignore reformatting
         keyword = keyword.replace("Outline of", "")
     }
     keyword = keyword.toLowerCase()
@@ -12,7 +12,7 @@ function showOutlineOptions(data){
     // push only options with outline
     search = data.query.search
     console.log(search)
-    finaloutline = []
+    finaloutline = [] //reset
     search.forEach(element => {
         outlinetitle = element['title']
         if (outlinetitle.indexOf('Outline of') != -1){
@@ -21,12 +21,12 @@ function showOutlineOptions(data){
     })
     console.log(finaloutline) // list of Outline of __
 
-    for (k=0; k<10; k++) {
+    for (k=0; k<10; k++) { //reset
     documentid = `outline_${k}`
     document.getElementById(documentid).innerHTML = ''
     }
     
-    for (i=0; i<finaloutline.length; i++) {
+    for (i=0; i<finaloutline.length; i++) { //show options on page
         documentid = `outline_${i}`
         document.getElementById(documentid).innerHTML = finaloutline[i]
     }
@@ -37,7 +37,6 @@ function outlineonly() { //start of constructing outline
     
     indexkeyword = document.getElementById('selectOutline').options.selectedIndex
     selectedOutline = finaloutline[indexkeyword]
-    //selectedOutline = "Outline of science"
     //console.log(selectedOutline)
     apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
     console.log(apirequired)
@@ -55,10 +54,12 @@ function showoutine(data) {
     headers_index = []
     temp_contentunderheader = []
     contentunderheader = []
-    list_of_headers = newdata.match(/(\\n==)+[\w\s]+==/g)
+    
+    //find header to header; between headers is the content
+    list_of_headers = newdata.match(/(\\n==)+[\w\s]+==/g) 
     list_of_headers.forEach(element => {
         singleindex = newdata.indexOf(element)
-        headers_index.push(singleindex)
+        headers_index.push(singleindex) //indexes where headers are
     })
     console.log(list_of_headers)
     console.log(headers_index)
@@ -109,10 +110,10 @@ function showoutine(data) {
 
         for (j=0; j<element.length; j++){
             console.log(element[j])
-            checksubcontent1 = element[j].search(/#\s/g) //check for special characters
-            checksubcontent2 = element[j].search(/\*\s/g) //check for special characters
-            checksubsubcontent = element[j].search(/#\*\s/g) //check for special characters
-            checksubx3content = element[j].search(/#\*\*\s/g) //check for special characters
+            checksubcontent1 = element[j].search(/#\s/g) //check for "# " with space
+            checksubcontent2 = element[j].search(/\*\s/g) //check for "* " with space
+            checksubsubcontent = element[j].search(/#\*\s/g) //check for "#* " with space
+            checksubx3content = element[j].search(/#\*\*\s/g) //check for "#** " with space
   
             currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
             currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
@@ -144,7 +145,7 @@ function showoutine(data) {
                 currenttempsubsubobj = Object.keys(tempsubsubobj)[Object.keys(tempsubsubobj).length -1]
                 testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj][currentsubsubcontent][currenttempsubsubobj] = subx3content
                             
-            } else if (checksubcontent1 == 0||checksubcontent2 == 0) { //check #
+            } else if (checksubcontent1 == 0||checksubcontent2 == 0) { //check # , check *
                 subsubcontent = [] //reset subsubcontent
                 addsubcontentjson = {}
                 addsubcontentjson[element[j]] = {}
@@ -152,10 +153,11 @@ function showoutine(data) {
 
                 //model
                 contentJSON = testJSON[listofheaders[i]] //list
-                currentcontent = Object.keys(contentJSON)[Object.keys(contentJSON).length-1] //gives you the last index of the content under the header; JSON
+                currentcontent = Object.keys(contentJSON)[Object.keys(contentJSON).length-1] //last index of the content under the header; JSON
                 tempobj = testJSON[listofheaders[i]][content.length-1] // content, last index; layer below the header
-                currenttempobj = Object.keys(tempobj)[Object.keys(tempobj).length-1] // gives you the key 
-                testJSON[listofheaders[i]][currentcontent][currenttempobj] = subcontent //json[key, header][last index of the value(array) under key,header][key of the value] = value of the value
+                currenttempobj = Object.keys(tempobj)[Object.keys(tempobj).length-1] // key 
+                testJSON[listofheaders[i]][currentcontent][currenttempobj] = subcontent 
+                //json[key, header][last index of the value(array) under key,header][key of the value] = value of the value
 
             } else if (checksubcontent1 == -1 || checksubcontent2 == -1) {
                 subcontent = [] //reset subcontent

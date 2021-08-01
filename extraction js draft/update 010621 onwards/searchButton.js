@@ -136,7 +136,7 @@ function gotImage(data){ // function required to get image
 };
 
 
-function backupImage(encodedWordAgain){
+function backupImage(encodedWordAgain){ // if gotImage(data) fails, this function will help to give an image
     console.log('Finding backup image')
     sampleimageurl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedWordAgain}&format=json`;
 
@@ -145,10 +145,10 @@ function backupImage(encodedWordAgain){
     function getimg(data){
         myDump = JSON.stringify(data);
 
-        lolsStart = myDump.indexOf('//upload');
-        lolsEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\("\)|" decoding)/i);
-        url = myDump.substring(lolsStart+2,lolsEnd+4);
-        console.log(lolsStart, lolsEnd);
+        backupStart = myDump.indexOf('//upload');
+        backupEnd = myDump.search(/\.(png|jpg|JPEG|svg)\\("\)|" decoding)/i); //filtering possible end of file name
+        url = myDump.substring(backupStart+2,backupEnd+4);
+        console.log(backupStart, backupEnd);
         console.log(url);
         imageplease = `https://${url}`;
         img = document.createElement('img'); 
@@ -161,7 +161,7 @@ function backupImage(encodedWordAgain){
 
 function getSuggestions(encodedOption){ 
     // req to get suggestions by finding freq appeared words in full content
-    urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`;
+    const urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`;
 
     loadJSON(urlSuggestions, findSuggestions, 'jsonp'); //load full content of selected option
 }
@@ -174,7 +174,7 @@ function findSuggestions(data){
     let links = helloSuggestions.match(/\[\[([^\]]*)\]\]/g);
     cleanedLinks = [];
     links.forEach(element => {
-        cleanedLinks.push(element.replace( /(^.*\[|\].*$)/g, ''));
+        cleanedLinks.push(element.replace( /(^.*\[|\].*$)/g, '')); //clean unnecessary symbols
     });
     slicedLinks = [];
     slicedLinks = descendingUniqueSort(cleanedLinks).slice(0,numofSuggestions);
@@ -214,7 +214,7 @@ function createSuggestions(element, index) {
     document.getElementById(suggestedID).innerHTML = element;
 };
 
-function getJSONFile() {
+function getJSONFile() { //repackage search result into JSON file
     searchedJSON = {
         "searchTerm": OptionTitle,
         "page id": pageID,
@@ -245,7 +245,7 @@ function getJSONFile() {
 
 }
 
-function getmultipleJSON() {    
+function getmultipleJSON() { //get collection of multiple searches in json
     console.log(collectionJSON)
 }
 
