@@ -10,33 +10,33 @@ This project aims to develop an efficient algorithm to extract open access infor
 
 Below are the parts of Wikipedia API involved. For a more extensive guide, please refer to Wikipedia's documentation here: https://www.mediawiki.org/wiki/API:Main_page
 
-sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
+    sentenceAPI = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`;
 
-Variable "word" is the keyword to be searched. Adjust the number of sentences using the variable "numofSentences". API to find the first few sentences of the keyword searched.
+        Variable "word" is the keyword to be searched. Adjust the number of sentences using the variable "numofSentences". API to find the first few sentences of the keyword searched.
 
-urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
+    urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
 
-Variable "encodedOption" is the option selected by the user, encoded in ascii format. API to find content of the keyword searched.
+        Variable "encodedOption" is the option selected by the user, encoded in ascii format. API to find content of the keyword searched.
 
-urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
+    urlGetPageid = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
 
-Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find the page ID of the Wikipedia page of the keyword searched.
+        Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find the page ID of the Wikipedia page of the keyword searched.
 
-urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
+    urlFindTable = `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
 
-Variable "finallyPageid" is the pageid of the keyword to be searched. API to find content of the keyword searched. Note the difference from urlSuggestions, where the result of this API will return infobox information in the content.
+        Variable "finallyPageid" is the pageid of the keyword to be searched. API to find content of the keyword searched. Note the difference from urlSuggestions, where the result of this API will return infobox information in the content.
 
-urlGetPageidElement = `https://en.wikipedia.org/w/api.php?action=query&titles=Template:Infobox_${encodedwordInfobox}&format=json`
+    urlGetPageidElement = `https://en.wikipedia.org/w/api.php?action=query&titles=Template:Infobox_${encodedwordInfobox}&format=json`
 
-Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find content of the keyword that is related to chemical element.
+        Variable "encodedwordInfobox" is the keyword to be searched, encoded in ascii format. API to find content of the keyword that is related to chemical element.
 
-outlinepossibilities = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
+    outlinepossibilities = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
 
-Variable keyword is the keyword to be searched. API to find suggested searches of the "Outline of [keyword]"
+        Variable keyword is the keyword to be searched. API to find suggested searches of the "Outline of [keyword]"
 
-apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
+    apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
 
-Variable selectedOutline is the keyword to be searched, encoded in ascii format. API to find content of the Outline of keyword.
+        Variable selectedOutline is the keyword to be searched, encoded in ascii format. API to find content of the Outline of keyword.
 
 ## Code
 
@@ -80,6 +80,7 @@ functions:
     * getSuggestions(encodedOption): obtain possible suggestions using the constant urlSuggestions
 
     * findSuggestions(data): converts the JSON file into string, search for hyperlinked phrases/words ([[XXXX]]) and sort them based on how often it appears on the Wikipedia page using descendingUniqueSort().
+
     * createSuggestions(element, index): print element in slicedLinks onto the html page.
 
     * getJSONFile(): format the results of the search into JSON for storage purposes.
