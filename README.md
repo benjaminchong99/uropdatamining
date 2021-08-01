@@ -38,6 +38,10 @@ Below are the parts of Wikipedia API involved. For a more extensive guide, pleas
 
         Variable selectedOutline is the keyword to be searched, encoded in ascii format. API to find content of the Outline of keyword.
 
+### p5.js
+
+This file is required to provide a means to read the JSON file obtained from the Wikipedia API. It includes functions such as setup() and loadJSON().
+
 ## Code
 
 ### main.js
