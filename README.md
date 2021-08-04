@@ -64,21 +64,29 @@ The file contains the functions that search the user input in Wikipedia and retu
 
 functions:
 
-- setup(): start of code
+- setup():
+  start of code
 
-- termTosearch: keyword/input by user, variable
+- termTosearch:
+  keyword/input by user, variable
 
-- loadJSON(x,y,z): required to read the JSON file from the Wikipedia API.
+- loadJSON(x,y,z):
+  required to read the JSON file from the Wikipedia API.
 
-- startSearch(termTosearch): search for the keyword/input using the Wikipedia API
+- startSearch(termTosearch):
+  search for the keyword/input using the Wikipedia API
 
-- gotContent(data): load the content from the JSON file received from the Wikipedia API.
+- gotContent(data):
+  load the content from the JSON file received from the Wikipedia API.
 
-- optionsAvailable.forEach(): loop action for each element
+- optionsAvailable.forEach():
+  loop action for each element
 
-- optionsmaybe(element,index): print element in optionsAvailable onto the html page.
+- optionsmaybe(element,index):
+  print element in optionsAvailable onto the html page.
 
-- clearHistory(): clear all histories of word searched and suggestions
+- clearHistory():
+  clear all histories of word searched and suggestions
 
 ### searchButton.js
 
@@ -86,41 +94,59 @@ This file contains the functions to perform search on Wikipedia based on the opt
 
 functions:
 
-- searchButton(): search keyword
+- searchButton():
+  search keyword
 
-- encodedURIComponent(): encode keyword into ascii format
+- encodedURIComponent():
+  encode keyword into ascii format
 
-- twoSentences(word): obtain the first two sentences of content using sentenceAPI.
+- twoSentences(word):
+  obtain the first two sentences of content using sentenceAPI.
 
-- getTwoSentences(data): extract the two sentences from the json file.
+- getTwoSentences(data):
+  extract the two sentences from the json file.
 
-- gotImamge(data): extract the url of the image from the json file.
+- gotImamge(data):
+  extract the url of the image from the json file.
 
-- backupImage(encodedWordAgain): In the event that gotImage(data) was unable to obtain the image url, search for the image again using getimg(data)
+- backupImage(encodedWordAgain):
+  In the event that gotImage(data) was unable to obtain the image url, search for the image again using getimg(data)
 
-- getimg(data): converts JSON file into a string and search for the image url
+- getimg(data):
+  converts JSON file into a string and search for the image url
 
-- getSuggestions(encodedOption): obtain possible suggestions using urlSuggestions
+- getSuggestions(encodedOption):
+  obtain possible suggestions using urlSuggestions
 
-- findSuggestions(data): converts the JSON file into string, search hyperlinked phrases/words
+- findSuggestions(data):
+  converts the JSON file into string, search hyperlinked phrases/words
 
-- descendingUniqueSort(): sort hyperlinked phrases/words
+- descendingUniqueSort():
+  sort hyperlinked phrases/words
 
-- createSuggestions(element, index): print element in slicedLinks onto html page.
+- createSuggestions(element, index):
+  print element in slicedLinks onto html page.
 
-- getJSONFile(): format results of the search into JSON for storage purposes.
+- getJSONFile():
+  format results of the search into JSON for storage purposes.
 
-- console_logJSON(): print JSON file containing results of the search in the console
+- console_logJSON():
+  print JSON file containing results of the search in the console
 
-- resolveJSON(): set timer for JSON file of results of the search to be returned after 5 seconds.
+- resolveJSON():
+  set timer for JSON file of results of the search to be returned after 5 seconds.
 
-- getmultipleJSON(): print JSON file containing all results of the searches in the console.
+- getmultipleJSON():
+  print JSON file containing all results of the searches in the console.
 
-- displayHistory(OptionTitle, hyperlink): Display history of all keywords that were searched with hyperlink.
+- displayHistory(OptionTitle, hyperlink):
+  Display history of all keywords that were searched with hyperlink.
 
-- createInfobox(OptionTitle): Search and display infobox. Refer to version2infobox.js.
+- createInfobox(OptionTitle):
+  Search and display infobox. Refer to version2infobox.js.
 
-- possibleOutline(OptionTitle): Search for possible Outlines of the keyword. Refer to outline.js.
+- possibleOutline(OptionTitle):
+  Search for possible Outlines of the keyword. Refer to outline.js.
 
 ### version2infobox.js
 
@@ -128,13 +154,17 @@ This file contains the functions to look for possible infobox present in the Wik
 
 functions:
 
-- createInfobox(inputphrase): start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageid.
+- createInfobox(inputphrase):
+  start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageid.
 
-- infoboxPageid(data): obtain pageid of the Wikipedia page and run the search for the infobox.
+- infoboxPageid(data):
+  obtain pageid of the Wikipedia page and run the search for the infobox.
 
-- runTable(finallyPageid): obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
+- runTable(finallyPageid):
+  obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
 
-- infoboxContent(data): find the category of infobox:
+- infoboxContent(data):
+  find the category of infobox:
 
   - infobox: (general) Usually more human related keywords(Famous person, Albums, Country, etc.)
 
@@ -146,7 +176,8 @@ functions:
 
   - speciesbox: Classification of animals
 
-- buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page.
+- buildInfobox(infoboxStart, infoboxEnd):
+  construct the infobox on the html page.
 
 ### elementbox.js
 
@@ -154,13 +185,17 @@ This file contains the functions to look for infobox present in the Wikipedia pa
 
 functions:
 
-- infoboxElement(): start of finding infobox.
+- infoboxElement():
+  start of finding infobox.
 
-- infoboxElementPageid(data): obtain pageid of the Wikipedia page and run the search for the infobox.
+- infoboxElementPageid(data):
+  obtain pageid of the Wikipedia page and run the search for the infobox.
 
-- runElementTable(finallyPageid): obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
+- runElementTable(finallyPageid):
+  obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
 
-- checkElementExistence(data): confirms the existence of the infobox of the keyword searched.
+- checkElementExistence(data):
+  confirms the existence of the infobox of the keyword searched.
 
 ### outline.js
 
@@ -168,10 +203,14 @@ The file mainly contains the functions to display and store Wikipedia search, in
 
 functions:
 
-- possibleOutline(OptionTitle): search "Outline of [keyword]" in Wikipedia.
+- possibleOutline(OptionTitle):
+  search "Outline of [keyword]" in Wikipedia.
 
-- showOutlineOptions(data): print out the results of the possible searches of "Outline of keyword" on the html page.
+- showOutlineOptions(data):
+  print out the results of the possible searches of "Outline of keyword" on the html page.
 
-- outlineonly(): start search for outline that the user chose.
+- outlineonly():
+  start search for outline that the user chose.
 
-- showoutine(data): take the JSON file, read and repackage the information into a simpler JSON file.
+- showoutine(data):
+  take the JSON file, read and repackage the information into a simpler JSON file.
