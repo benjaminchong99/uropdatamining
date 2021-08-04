@@ -72,37 +72,39 @@ This file contains the functions to perform search on Wikipedia based on the opt
 
 functions:
 
-- searchButton(): search keyword chosen by the user.
+- searchButton(): search keyword
 
-- encodedURIComponent(): to encode keyword into ascii format so that the url can be readable
+- encodedURIComponent(): encode keyword into ascii format
 
-- twoSentences(word): obtain the first two sentences of the search using the constant sentenceAPI.
+- twoSentences(word): obtain the first two sentences of content using sentenceAPI.
 
-- getTwoSentences(data): extract the two sentences from the json file and print the sentences on the html page.
+- getTwoSentences(data): extract the two sentences from the json file.
 
-- gotImamge(data): extract the url of the image from the json file and print the image on the html page.
+- gotImamge(data): extract the url of the image from the json file.
 
-- backupImage(encodedWordAgain): In the event that gotImage(data) was unable to obtain the image url, search for the image again through another method using getimg(data)
+- backupImage(encodedWordAgain): In the event that gotImage(data) was unable to obtain the image url, search for the image again using getimg(data)
 
-- getimg(data): converts JSON file into a string and manually search for the image url
+- getimg(data): converts JSON file into a string and search for the image url
 
-- getSuggestions(encodedOption): obtain possible suggestions using the constant urlSuggestions
+- getSuggestions(encodedOption): obtain possible suggestions using urlSuggestions
 
-- findSuggestions(data): converts the JSON file into string, search for hyperlinked phrases/words and sort them using descendingUniqueSort().
+- findSuggestions(data): converts the JSON file into string, search hyperlinked phrases/words
 
-- createSuggestions(element, index): print element in slicedLinks onto the html page.
+- descendingUniqueSort(): sort hyperlinked phrases/words
 
-- getJSONFile(): format the results of the search into JSON for storage purposes.
+- createSuggestions(element, index): print element in slicedLinks onto html page.
 
-- console_logJSON(): print the JSON file containing the results of the search in the console
+- getJSONFile(): format results of the search into JSON for storage purposes.
 
-- resolveJSON(): set timer for JSON file containing the results of the search to be returned after 5 seconds.
+- console_logJSON(): print JSON file containing results of the search in the console
 
-- getmultipleJSON(): print the JSON file containing all the results of the searches in the console.
+- resolveJSON(): set timer for JSON file of results of the search to be returned after 5 seconds.
 
-- displayHistory(OptionTitle, hyperlink): Display the history of all the keywords that were searched. the keywords displayed are hyperlinked with the url to the Wikipedia page.
+- getmultipleJSON(): print JSON file containing all results of the searches in the console.
 
-- createInfobox(OptionTitle): Search and display infobox present in the Wikipedia page. Refer to version2infobox.js.
+- displayHistory(OptionTitle, hyperlink): Display history of all keywords that were searched with hyperlink.
+
+- createInfobox(OptionTitle): Search and display infobox. Refer to version2infobox.js.
 
 - possibleOutline(OptionTitle): Search for possible Outlines of the keyword. Refer to outline.js.
 
@@ -114,23 +116,23 @@ functions:
 
 - createInfobox(inputphrase): start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageid.
 
-- infoboxPageid(data): obtain the pageid of the Wikipedia page and run the search for the infobox.
+- infoboxPageid(data): obtain pageid of the Wikipedia page and run the search for the infobox.
 
-- runTable(finallyPageid): start to obtain the JSON file and search for the presennce of infobox using the variable urlFindTable.
+- runTable(finallyPageid): obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
 
 - infoboxContent(data): find the category of infobox:
 
-- infobox: (general) Usually more human related keywords(Famous person, Albums, Country, etc.)
+  - infobox: (general) Usually more human related keywords(Famous person, Albums, Country, etc.)
 
-- chembox: Chemistry related keywords (more of mixtures, compounds)
+  - chembox: Chemistry related keywords (more of mixtures, compounds)
 
-- element: Chemical elements
+  - element: Chemical elements
 
-- taxobox/ Automatic taxobox: Animals
+  - taxobox/ Automatic taxobox: Animals
 
-- speciesbox: Classification of animals
+  - speciesbox: Classification of animals
 
-- buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page.
+  - buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page.
 
 ### elementbox.js
 
@@ -138,13 +140,13 @@ This file contains the functions to look for infobox present in the Wikipedia pa
 
 functions:
 
-- infoboxElement(): start of finding infobox by first finding the pageid of the Wikipedia page using urlGetPageidElement.
+- infoboxElement(): start of finding infobox.
 
-- infoboxElementPageid(data): obtain the pageid of the Wikipedia page and run the search for the infobox.
+- infoboxElementPageid(data): obtain pageid of the Wikipedia page and run the search for the infobox.
 
-- runElementTable(finallyPageid): start to obtain the JSON file and search for the presennce of infobox using the variable urlFindTable.
+- runElementTable(finallyPageid): obtain JSON file and search for the presennce of infobox using the variable urlFindTable.
 
-- checkElementExistence(data): confirms whether there is the existence of the infobox of the keyword searched.
+- checkElementExistence(data): confirms the existence of the infobox of the keyword searched.
 
 ### outline.js
 
