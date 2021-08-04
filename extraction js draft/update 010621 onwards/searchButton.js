@@ -13,7 +13,7 @@ let infobox_json = '';
 
 /**GROUP 2: SEARCH THE TERM */
 // SEARCH SELECTED TERM FROM OPTIONS AVAILABLE
-function goldenButton(){
+function searchButton(){
     indexSelected = document.getElementById('optionsSelect').options.selectedIndex;
     selectedOption = optionsAvailable[indexSelected];
     OptionTitle = selectedOption['title'];
@@ -76,7 +76,7 @@ async function console_logJSON(){
 }
 
 
-/** Start of all defintiions of functions required in goldenButton() */ 
+/** Start of all defintiions of functions required in searchButton() */ 
 
 
 function displayHistory(OptionTitle, hyperlink) {

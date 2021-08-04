@@ -38,9 +38,9 @@ function outlineonly() { //start of constructing outline
     indexkeyword = document.getElementById('selectOutline').options.selectedIndex
     selectedOutline = finaloutline[indexkeyword]
     //console.log(selectedOutline)
-    apirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
-    console.log(apirequired)
-    loadJSON(apirequired,showoutine,'jsonp')
+    outlineapirequired =`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
+    console.log(outlineapirequired)
+    loadJSON(outlineapirequired,showoutine,'jsonp')
 
 }
 
@@ -113,14 +113,16 @@ function showoutine(data) {
             checksubcontent1 = element[j].search(/#\s/g) //check for "# " with space
             checksubcontent2 = element[j].search(/\*\s/g) //check for "* " with space
             checksubsubcontent = element[j].search(/#\*\s/g) //check for "#* " with space
-            checksubx3content = element[j].search(/#\*\*\s/g) //check for "#** " with space
+            checksubsubcontent2 = element[j].search(/\*\*/g) //check for "#* " with space
+            checksubx3content= element[j].search(/#\*\*\s/g) //check for "#** " with space
+            checksubx3content2 = element[j].search(/\*\*\*/g) //check for "#** " with space
   
             currentsubcontent = Object.keys(subcontent)[Object.keys(subcontent).length -1]
             currentsubsubcontent = Object.keys(subsubcontent)[Object.keys(subsubcontent).length -1]
 
 
 
-            if (checksubsubcontent == 0) { //check #*
+            if (checksubsubcontent == 0|| checksubsubcontent2 == 0) { //check #*
                 subx3content = [] //reset subx3content
                 addsubsubcontentjson = {}
                 addsubsubcontentjson[element[j]] = {}
@@ -134,7 +136,7 @@ function showoutine(data) {
                 testJSON[listofheaders[i]][currentcontent][currenttempobj][currentsubcontent][currenttempsubobj] = subsubcontent
                 
 
-            } else if (checksubx3content == 0) { //check #**
+            } else if (checksubx3content == 0|| checksubx3content2 == 0) { //check #**
                 addsubx3contentjson = {}
                 addsubx3contentjson[element[j]] = {}
                 subx3content.push(addsubx3contentjson)
@@ -183,7 +185,6 @@ function showoutine(data) {
 
     outlinetable = document.getElementById('outline');
     outlinetable.innerHTML =''
-    // need some other stuff to format?
     splicedJSON = {}
     listofheaders = [] // for test
     contentunderheader.forEach(element => {
