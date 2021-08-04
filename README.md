@@ -56,7 +56,7 @@ API to find content of the Outline of keyword.
 
 This file is required to provide a means to read the JSON file obtained from the Wikipedia API. It includes functions such as setup() and loadJSON().
 
-## Code
+## Code (Under final version folder)
 
 ### main.js
 
