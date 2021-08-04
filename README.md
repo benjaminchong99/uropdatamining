@@ -11,32 +11,46 @@ This project aims to develop an efficient algorithm to extract open access infor
 Below are the parts of Wikipedia API involved. For a more extensive guide, please refer to Wikipedia's documentation here: https://www.mediawiki.org/wiki/API:Main_page
 
 - sentenceAPI:
-  `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`
-  API to find the first few sentences of the keyword searched
 
-- urlSuggestions:  
-  `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
-  API to find content of the keyword searched.
+`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=${numofSentences}&exlimit=1&titles=${word}&explaintext=1&formatversion=2&format=json`
 
-- urlGetPageid:  
-   `https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
-  API to find the page ID of the Wikipedia page of the keyword searched.
+API to find the first few sentences of the keyword searched
+
+- urlSuggestions:
+
+`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`
+
+API to find content of the keyword searched.
+
+- urlGetPageid:
+
+`https://en.wikipedia.org/w/api.php?action=query&titles=${encodedwordInfobox}&format=json`
+
+API to find the page ID of the Wikipedia page of the keyword searched.
 
 - urlFindTable:
-  `https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
-  API to find content of the keyword searched.
 
-- urlGetPageidElement:  
-   `https://en.wikipedia.org/w/api.php?action=query&titles=Template:Infobox_${encodedwordInfobox}&format=json`
-  API to find content of the keyword that is related to chemical element.
+`https://en.wikipedia.org/w/api.php?action=parse&pageid=${finallyPageid}&section=0&prop=wikitext&format=json`
+
+API to find content of the keyword searched.
+
+- urlGetPageidElement:
+
+`https://en.wikipedia.org/w/api.php?action=query&titles=Template:Infobox_${encodedwordInfobox}&format=json`
+
+API to find content of the keyword that is related to chemical element.
 
 - outlinepossibilities:
-  `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
-  API to find suggested searches of the "Outline of [keyword]"
+
+`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Outline_of_${keyword}&format=json`
+
+API to find suggested searches of the "Outline of [keyword]"
 
 - outlineapirequired:
-  `https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
-  API to find content of the Outline of keyword.
+
+`https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&page=${selectedOutline}&format=json`
+
+API to find content of the Outline of keyword.
 
 ### p5.js
 
@@ -132,7 +146,7 @@ functions:
 
   - speciesbox: Classification of animals
 
-  - buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page.
+- buildInfobox(infoboxStart, infoboxEnd): construct the infobox on the html page.
 
 ### elementbox.js
 
