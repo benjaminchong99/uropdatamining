@@ -35,15 +35,15 @@ function startSearch(termTosearch) {
 function gotContent(data){ //FUNCTION REQ TO SHOW OPTIONS
     console.log(data);
     optionsAvailable = data.query.search;
-    allTitlesnPageid = []
+    allTitlesnPageid = [];
     optionsAvailable.forEach(element =>{
-        allTitlesnPageid.push([element['title'], element['pageid']])
-    })
-    console.log(allTitlesnPageid)
+        allTitlesnPageid.push([element['title'], element['pageid']]);
+    });
+    console.log(allTitlesnPageid);
     
     optionsAvailable.forEach(optionsmaybe);
     
-    console.log(optionsAvailable)
+    console.log(optionsAvailable);
 };
 
 
@@ -65,11 +65,11 @@ function clearHistory(){ //clear all history
     listSuggestions = [];
     listSuggestionsLinked = [];
     suggestionHistory = [];
-    document.getElementById('searchedWords').innerHTML = wordHistoryLinked 
-    document.getElementById('listSuggest').innerHTML = listSuggestionsLinked
-    document.getElementById('wordSearched').innerHTML = ''
-    collectionJSON = {}
-}
+    document.getElementById('searchedWords').innerHTML = wordHistoryLinked;
+    document.getElementById('listSuggest').innerHTML = listSuggestionsLinked;
+    document.getElementById('wordSearched').innerHTML = '';
+    collectionJSON = {};
+};
 
 //console.log(wordHistoryLinked, listSuggestionsLinked) at the end of code for searched values
 //console.log(imageplease) at the end of code for url of current image. Note that variable is in function, hence req to add global var first.

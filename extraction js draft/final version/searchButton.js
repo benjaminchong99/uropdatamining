@@ -31,7 +31,7 @@ function searchButton(){
 
 
     /**SECTION FOR INFOBOX */
-    createInfobox(OptionTitle)
+    createInfobox(OptionTitle);
     
 
     /** SECTION FOR HYPERLINK */
@@ -52,12 +52,12 @@ function searchButton(){
     
 
     /** SECTION FOR POSSIBLE OUTLINE */
-    possibleOutline(OptionTitle)
+    possibleOutline(OptionTitle);
 
     /** SECTION TO GET JSON */
-    console.log(allTitlesnPageid)
-    console_logJSON()
-    console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...')
+    console.log(allTitlesnPageid);
+    console_logJSON();
+    console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...');
 };
 
 
@@ -67,13 +67,13 @@ function resolveJSON(){
         setTimeout(() => {
             resolve(getJSONFile());
         }, 5000);
-        })
-}
+        });
+};
 //setTimeout(() => {   console.log('Please wait patiently as the json format is generating...'); }, 4000);
 async function console_logJSON(){
-    console.log('running JSON')
-    await resolveJSON()
-}
+    console.log('running JSON');
+    await resolveJSON();
+};
 
 
 /** Start of all defintiions of functions required in searchButton() */ 
@@ -81,10 +81,10 @@ async function console_logJSON(){
 
 function displayHistory(OptionTitle, hyperlink) {
     if (wordHistory.includes(OptionTitle + ' ')=== true){
-        console.log('running omit')
+        console.log('running omit');
     } else {
         OptionTitleLinked = OptionTitle.link(hyperlink);
-        wordHistory.push(OptionTitle + ' ')
+        wordHistory.push(OptionTitle + ' ');
         wordHistoryLinked.push(OptionTitleLinked + ' ');
         document.getElementById('searchedWords').innerHTML = wordHistoryLinked; //get wordHistory
     }
@@ -137,7 +137,7 @@ function gotImage(data){ // function required to get image
 
 
 function backupImage(encodedWordAgain){ // if gotImage(data) fails, this function will help to give an image
-    console.log('Finding backup image')
+    console.log('Finding backup image');
     sampleimageurl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedWordAgain}&format=json`;
 
     loadJSON(sampleimageurl, getimg, 'jsonp');
@@ -164,7 +164,7 @@ function getSuggestions(encodedOption){
     const urlSuggestions =`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=${encodedOption}&rvslots=*&rvprop=content&format=json`;
 
     loadJSON(urlSuggestions, findSuggestions, 'jsonp'); //load full content of selected option
-}
+};
 
 
 function findSuggestions(data){
@@ -180,7 +180,7 @@ function findSuggestions(data){
     slicedLinks = descendingUniqueSort(cleanedLinks).slice(0,numofSuggestions);
     console.log(slicedLinks);// take the top 15 linked words
     slicedLinks.forEach(createSuggestions);        
-}
+};
 /**End of findSuggestions(data) */
 
 
@@ -226,32 +226,32 @@ function getJSONFile() { //repackage search result into JSON file
     };
     
     console.log("YOUR SEARCH IN JSON: ",searchedJSON);
-    repeatedTitle = false
+    repeatedTitle = false;
     for (i=0; i<collectionJSON.length; i++) {
         if (collectionJSON[i] == OptionTitle) {
-            console.log("repeated")
+            console.log("repeated");
             repeatedTitle = true;
-        }
-    }
+        };
+    };
 
     if (repeatedTitle == true) {
         // pass
     } else {
-        collectionJSON[OptionTitle] =searchedJSON
-    }
+        collectionJSON[OptionTitle] =searchedJSON;
+    };
     // convert JSON object to string
     //const JSONdata = JSON.stringify(searchedJSON);
     //console.log("your search in json: ", JSONdata);
 
-}
+};
 
 function justJSON() {
     console.log(searchedJSON);
-}
+};
 
 function getmultipleJSON() { //get collection of multiple searches in json
     console.log(collectionJSON);
-}
+};
 
 /*** END OF GROUP 2: SEARCH THE TERM
  * SHOULD HAVE PROVIDED THE RESULTS, IMAGE, SEARCH HISTORY, HYPERLINK

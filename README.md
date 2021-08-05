@@ -174,7 +174,7 @@ functions:
 
   Search for possible Outlines of the keyword. Refer to outline.js.
 
-### version2infobox.js
+### infobox.js
 
 This file contains the functions to look for possible infobox present in the Wikipedia page. Infoboxes are short concised information stored in the form of a table and usually displayed on the right column on the Wikipedia page.
 

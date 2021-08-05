@@ -38,16 +38,16 @@ function runTestandSearch(suggestionSelected){
     getSuggestions(encodedSuggestion);
 
     /**search for possible outline */    
-    possibleOutline(suggestionSelected)
+    possibleOutline(suggestionSelected);
     
     /** create JSON */
     OptionTitle = suggestionSelected;
     hyperlink = hyperlinkSuggestion;
-    pageID = finallyPageid
+    pageID = finallyPageid;
 
-    console_logJSON()
-    console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...')
-}
+    console_logJSON();
+    console.log('!!!NOTE: PLEASE WAIT FOR JSON TO LOAD BEFORE CLICKING ANY BUTTON...');
+};
 
 
 function displaySuggestion(suggestionSelected, hyperlinkSuggestion) {
@@ -66,8 +66,8 @@ function displaySuggestion(suggestionSelected, hyperlinkSuggestion) {
             listSuggestionsLinked.push(suggestionSelectedLinked);    
         };
         document.getElementById('listSuggest').innerHTML = listSuggestionsLinked;
-    }
-}
+    };
+};
 
 /*** END OF GROUP 3: SEARCH SUGGESTED WORD
  * SHOULD HAVE PROVIDED SUGGESTED RESULT, UPDATE ORD HISTORY, UPDATE HYPERLINK, CHANGE CURRENT BOX INTO A LIST OF NEW SUGGESTIONS 
@@ -79,22 +79,22 @@ function previousButton(){
     // this function should allow user to go back to the previous suggestion to find out more
     listSuggestions.pop();
     if (listSuggestions.length < 1){
-        console.log("empty")
-        runTestandSearch(OptionTitle)
-        listSuggestions = []
-        document.getElementById('wordSearched').innerHTML = OptionTitle
+        console.log("empty");
+        runTestandSearch(OptionTitle);
+        listSuggestions = [];
+        document.getElementById('wordSearched').innerHTML = OptionTitle;
     } else{
-        lastTerm = listSuggestions.length -1
-        console.log(listSuggestions.length)
-        prevSelection = listSuggestions[lastTerm]
-        document.getElementById('wordSearched').innerHTML = prevSelection
-        runTestandSearch(prevSelection)
-    }
-}
+        lastTerm = listSuggestions.length -1;
+        console.log(listSuggestions.length);
+        prevSelection = listSuggestions[lastTerm];
+        document.getElementById('wordSearched').innerHTML = prevSelection;
+        runTestandSearch(prevSelection);
+    };
+};
 
 function refreshSelection(){
     // this function allow users to refresh the search in case the information is not displayed properly
-    refreshWord = document.getElementById('wordSearched').innerHTML
-    console.log("Refreshing: ", refreshWord)
-    runTestandSearch(refreshWord)
-}
+    refreshWord = document.getElementById('wordSearched').innerHTML;
+    console.log("Refreshing: ", refreshWord);
+    runTestandSearch(refreshWord);
+};
